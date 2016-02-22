@@ -111,7 +111,7 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li><a href='http://popily.com'>Get An API Key</a></li>
+            <li><a href='http://popily.com'>Get an API key</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
@@ -145,11 +145,78 @@
 
 <p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
 
+<table><thead>
+<tr>
+<th>Status Code</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>200</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>201</td>
+<td>Resource Created</td>
+</tr>
+<tr>
+<td>204</td>
+<td>No Content</td>
+</tr>
+<tr>
+<td>304</td>
+<td>Not Modified</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Bad Request</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found</td>
+</tr>
+<tr>
+<td>429</td>
+<td>Too Many Requests</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error</td>
+</tr>
+<tr>
+<td>503</td>
+<td>Service Unavailable</td>
+</tr>
+</tbody></table>
+
+<h2 id="making-requests">Making requests</h2>
+
+<p>Popily follows RESTful API patterns. With request arguments can be passed as params, form data, or JSON with correct Content-Type headers.</p>
+
+<ul>
+<li><code class="prettyprint">GET</code> - Retrieve resources</li>
+<li><code class="prettyprint">POST</code> - Create new resources</li>
+<li><code class="prettyprint">PUT</code> - Modify existing resources</li>
+<li><code class="prettyprint">DELETE</code> - Remove resources</li>
+</ul>
+
+<h2 id="making-requests">Making requests</h2>
+
+<p>Popily uses pagination when <code class="prettyprint">GET</code> requests returns a list of objects (e.g. insights, sources). To get all objects in a paginated list of objects, you will need to paginate through the list of objects.</p>
+
 <h1 id="data-sources-endpoint">Data sources endpoint</h1>
 
 <p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
 
-<h2 id="add-data">Add data</h2>
+<h2 id="create-source">Create source</h2>
 <pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily</span>
 
 <span class="n">popily_api</span> <span class="o">=</span> <span class="n">popily</span><span class="o">.</span><span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR API TOKEN'</span><span class="p">)</span>
@@ -212,7 +279,7 @@
 <tr>
 <td>vector_set</td>
 <td>JSON object</td>
-<td>A list of column headers and their data types.</td>
+<td><a href="#data-types">A list of column headers and their data types</a>.</td>
 </tr>
 <tr>
 <td>type</td>
@@ -236,7 +303,7 @@
 </tr>
 </tbody></table>
 
-<h2 id="data-types">Data Types</h2>
+<h2 id="source-data-types">Source data types</h2>
 
 <blockquote>
 <p>Here is an example of a JSON object for creating a new source. Note that the JSON object contains column header and column data type for every row in the data source.</p>
@@ -266,6 +333,8 @@
 </code></pre>
 
 <p>All source resources in Popily must contain a description of the type of data in each column. Popily understands more than just integers and strings, it can also work with higher-level concepts like categories, US states or currency. We’re always adding to this list, but these are the available types as of today.</p>
+
+<p>Note: You only need to define the columns you care about. Popily will ignore everything else.</p>
 
 <table><thead>
 <tr>
@@ -321,7 +390,52 @@
 </tr>
 </tbody></table>
 
-<h2 id="list-data">List data</h2>
+<h2 id="source-status">Source status</h2>
+
+<p>When a source resource is added to Popily, our Mechanical Tukey technology starts processing the data. You can check the status of any source resource by looking at the source status:</p>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>inspecting</td>
+<td>Examining new source.</td>
+</tr>
+<tr>
+<td>calculating</td>
+<td>Processing new source.</td>
+</tr>
+<tr>
+<td>reinspecting</td>
+<td>Reprocessing source after change.</td>
+</tr>
+<tr>
+<td>Adding</td>
+<td>Merging a source.</td>
+</tr>
+<tr>
+<td>error</td>
+<td>Something went wrong.</td>
+</tr>
+</tbody></table>
+
+<h2 id="explore-source">Explore source</h2>
+
+<blockquote>
+<p>Example API response after creating a new source</p>
+</blockquote>
+<pre class="highlight plaintext"><code>{
+    "id": 432,
+    "explore_path": "/explore/source/dc-wikia-data-csv-3/discoveries/"
+}
+</code></pre>
+
+<p>We’re exploring this data through the API, but once a data source has been added, you can also explore it through the Popily user interface. In the API response after you create a new data source, you’ll see an explore_path property, which is where you’ll find your new source via the interface.</p>
+
+<h2 id="list-sources">List sources</h2>
 
 <p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
 
