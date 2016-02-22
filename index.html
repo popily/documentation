@@ -119,15 +119,23 @@
       <div class="content">
         <h1 id="introduction">Introduction</h1>
 
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+<p>Popily provides a powerful REST API for integrating embedded analytics into your application.</p>
+
+<p>This API reference provides information on interacting with Popily&rsquo;s API endpoints.</p>
 
 <h1 id="authentication">Authentication</h1>
 
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+<p>Popily&rsquo;s API supports authentication through an API key. <a href="#api-key">API keys</a> can be obtained through an account with Popily.</p>
 
 <h2 id="api-key">API key</h2>
+<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">requests</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'https://popily.com/api/sources/'</span><span class="p">,</span>
+                    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'Authorization'</span><span class="p">:</span> <span class="s">'Token '</span> <span class="o">+</span> <span class="n">YOUR</span> <span class="n">TOKEN</span><span class="p">})</span>
+</code></pre>
 
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+<p>You authenticate with Popily using a token passed in the Authorization HTTP header. If you haven&rsquo;t been assigned a token, please contact us and we&rsquo;ll hook you up.</p>
+
+<p>Authentication includes an HTTP header <code class="prettyprint">Authorization: Token 12345</code>, so Popily knows who is making the request. We strongly recommend keeping this token to yourself, so think twice about making requests directly from your front-end code (even though that is technically possible).</p>
 
 <h1 id="interacting-with-the-api">Interacting with the API</h1>
 
@@ -180,8 +188,10 @@
 <p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
 
 <h2 id="install-client">Install client</h2>
+<pre class="highlight plaintext"><code>pip install popily-api
+</code></pre>
 
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+<p>Installing the Popily API client is easy with the package manager <a href="https://pypi.python.org/pypi/pip">pip</a>.</p>
 
 <h2 id="add_source">add_source</h2>
 
