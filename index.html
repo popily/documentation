@@ -190,9 +190,136 @@
                         <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
 </code></pre>
 
-<p>A (data) source resource is data a user has added to Popily and can be populated from a file, a database connection, or a JSON API.</p>
+<p>A (data) source resource is data a user has added to Popily and can be populated from a file, a database connection, or a JSON API. When you add a source to Popily, we&rsquo;ll automatically create a resource, inspect the resource, perform some calculations, and make a sample space of insight resources that you can browse in the application UI (or retrieve via the insights endpoint).</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Format</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>url</td>
+<td>string</td>
+<td>Full URL where the data file or API endpoint can be accessed.</td>
+</tr>
+<tr>
+<td>title</td>
+<td>string</td>
+<td>Human-readable name of the source.</td>
+</tr>
+<tr>
+<td>vector_set</td>
+<td>JSON object</td>
+<td>A list of column headers and their data types.</td>
+</tr>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>The type of data store providing data to the source.</td>
+</tr>
+<tr>
+<td>sheetname</td>
+<td>string</td>
+<td>Used when the data source is an Excel file. Denotes the name of the sheet to use.</td>
+</tr>
+<tr>
+<td>connection_string</td>
+<td>string</td>
+<td>Full connection string to your MySQL or Postgres database.</td>
+</tr>
+<tr>
+<td>query</td>
+<td>string</td>
+<td>The SQL query you&rsquo;d like to run on your database.</td>
+</tr>
+</tbody></table>
+
+<h2 id="data-types">Data Types</h2>
+
+<blockquote>
+<p>Here is an example of a JSON object for creating a new source. Note that the JSON object contains column header and column data type for every row in the data source.</p>
+</blockquote>
+<pre class="highlight plaintext"><code>{
+    'url': 'https://example.com/sales.csv',
+    'title': 'Sales Data',
+    'vector_set': [
+        {
+            'column_header': 'Date',
+            'data_type': 'datetime'
+        },
+        {
+            'column_header': 'Manager',
+            'data_type': 'category'
+        },
+        {
+            'column_header': 'Store ID',
+            'data_type': 'rowlabel'
+        },
+        {
+            'column_header': 'Sales',
+            'data_type': 'currency'
+        },
+    ]
+}
+</code></pre>
 
 <p>All source resources in Popily must contain a description of the type of data in each column. Popily understands more than just integers and strings, it can also work with higher-level concepts like categories, US states or currency. We’re always adding to this list, but these are the available types as of today.</p>
+
+<table><thead>
+<tr>
+<th>Data Type</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>category</td>
+<td>A column containing categorical values.</td>
+<td>Apple, Orange, Pear</td>
+</tr>
+<tr>
+<td>numeric</td>
+<td>A column of numeric values.</td>
+<td>320, 2, 23.10</td>
+</tr>
+<tr>
+<td>currency</td>
+<td>A column of numeric values as currencies.</td>
+<td>$320, $2, $23.10</td>
+</tr>
+<tr>
+<td>datetime</td>
+<td>A column of datetime or timestamps.</td>
+<td>12/12/2015, 2/3/15, January 6, 2015</td>
+</tr>
+<tr>
+<td>country</td>
+<td>A column of countries.</td>
+<td>Spain, France, England</td>
+</tr>
+<tr>
+<td>state</td>
+<td>A column of US states.</td>
+<td>Arizona, Maine, Oregon</td>
+</tr>
+<tr>
+<td>coordinate</td>
+<td>A column of latitude and longitude coordinate pairs.</td>
+<td>[43.522, 23.521]</td>
+</tr>
+<tr>
+<td>zipcode</td>
+<td>A column of US Zip codes.</td>
+<td>42351</td>
+</tr>
+<tr>
+<td>rowlabel</td>
+<td>A column of non-categorical uniquely or semi-uniquely identifying each individual row</td>
+<td>Steve Jobs, Dunder Muffin, Wendy Jones</td>
+</tr>
+</tbody></table>
 
 <h2 id="list-data">List data</h2>
 
