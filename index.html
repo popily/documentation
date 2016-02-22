@@ -4,86 +4,218 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>API Reference</title>
+    <title>Popily API Documentation</title>
 
     <style>
       .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
-.highlight, .highlight .w {
-  color: #f8f8f2;
-  background-color: #272822;
+.highlight .c, .highlight .cd {
+  color: #75715e;
+  font-style: italic;
 }
-.highlight .err {
-  color: #151515;
-  background-color: #ac4142;
+.highlight .cm {
+  color: #75715e;
+  font-style: italic;
 }
-.highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
-  color: #505050;
+.highlight .c1 {
+  color: #75715e;
+  font-style: italic;
 }
 .highlight .cp {
-  color: #f4bf75;
-}
-.highlight .nt {
-  color: #f4bf75;
-}
-.highlight .o, .highlight .ow {
-  color: #d0d0d0;
-}
-.highlight .p, .highlight .pi {
-  color: #d0d0d0;
-}
-.highlight .gi {
-  color: #90a959;
-}
-.highlight .gd {
-  color: #ac4142;
-}
-.highlight .gh {
-  color: #6a9fb5;
-  background-color: #151515;
+  color: #75715e;
   font-weight: bold;
 }
-.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
-  color: #aa759f;
+.highlight .cs {
+  color: #75715e;
+  font-weight: bold;
+  font-style: italic;
+}
+.highlight .err {
+  color: #960050;
+  background-color: #1e0010;
+}
+.highlight .gi {
+  color: #ffffff;
+  background-color: #324932;
+}
+.highlight .gd {
+  color: #ffffff;
+  background-color: #493131;
+}
+.highlight .ge {
+  color: #000000;
+  font-style: italic;
+}
+.highlight .gr {
+  color: #aa0000;
+}
+.highlight .gt {
+  color: #aa0000;
+}
+.highlight .gh {
+  color: #999999;
+}
+.highlight .go {
+  color: #888888;
+}
+.highlight .gp {
+  color: #555555;
+}
+.highlight .gs {
+  font-weight: bold;
+}
+.highlight .gu {
+  color: #aaaaaa;
+}
+.highlight .k, .highlight .kv {
+  color: #66d9ef;
+  font-weight: bold;
 }
 .highlight .kc {
-  color: #d28445;
-}
-.highlight .kt {
-  color: #d28445;
+  color: #66d9ef;
+  font-weight: bold;
 }
 .highlight .kd {
-  color: #d28445;
+  color: #66d9ef;
+  font-weight: bold;
 }
-.highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
-  color: #90a959;
+.highlight .kp {
+  color: #66d9ef;
+  font-weight: bold;
 }
-.highlight .sr {
-  color: #75b5aa;
+.highlight .kr {
+  color: #66d9ef;
+  font-weight: bold;
 }
-.highlight .si {
-  color: #8f5536;
+.highlight .kt {
+  color: #66d9ef;
+  font-weight: bold;
+}
+.highlight .kn {
+  color: #f92672;
+  font-weight: bold;
+}
+.highlight .ow {
+  color: #f92672;
+  font-weight: bold;
+}
+.highlight .o {
+  color: #f92672;
+  font-weight: bold;
+}
+.highlight .mf {
+  color: #ae81ff;
+}
+.highlight .mh {
+  color: #ae81ff;
+}
+.highlight .il {
+  color: #ae81ff;
+}
+.highlight .mi {
+  color: #ae81ff;
+}
+.highlight .mo {
+  color: #ae81ff;
+}
+.highlight .m, .highlight .mb, .highlight .mx {
+  color: #ae81ff;
 }
 .highlight .se {
-  color: #8f5536;
+  color: #ae81ff;
 }
-.highlight .nn {
-  color: #f4bf75;
+.highlight .sb {
+  color: #e6db74;
 }
-.highlight .nc {
-  color: #f4bf75;
+.highlight .sc {
+  color: #e6db74;
 }
-.highlight .no {
-  color: #f4bf75;
+.highlight .sd {
+  color: #e6db74;
 }
-.highlight .na {
-  color: #6a9fb5;
+.highlight .s2 {
+  color: #e6db74;
 }
-.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
-  color: #90a959;
+.highlight .sh {
+  color: #e6db74;
+}
+.highlight .si {
+  color: #e6db74;
+}
+.highlight .sx {
+  color: #e6db74;
+}
+.highlight .sr {
+  color: #e6db74;
+}
+.highlight .s1 {
+  color: #e6db74;
 }
 .highlight .ss {
-  color: #90a959;
+  color: #e6db74;
+}
+.highlight .s {
+  color: #e6db74;
+}
+.highlight .na {
+  color: #a6e22e;
+}
+.highlight .nc {
+  color: #a6e22e;
+  font-weight: bold;
+}
+.highlight .nd {
+  color: #a6e22e;
+  font-weight: bold;
+}
+.highlight .ne {
+  color: #a6e22e;
+  font-weight: bold;
+}
+.highlight .nf {
+  color: #a6e22e;
+  font-weight: bold;
+}
+.highlight .no {
+  color: #66d9ef;
+}
+.highlight .bp {
+  color: #f8f8f2;
+}
+.highlight .nb {
+  color: #f8f8f2;
+}
+.highlight .ni {
+  color: #f8f8f2;
+}
+.highlight .nn {
+  color: #f8f8f2;
+}
+.highlight .vc {
+  color: #f8f8f2;
+}
+.highlight .vg {
+  color: #f8f8f2;
+}
+.highlight .vi {
+  color: #f8f8f2;
+}
+.highlight .nv {
+  color: #f8f8f2;
+}
+.highlight .w {
+  color: #f8f8f2;
+}
+.highlight .nl {
+  color: #f8f8f2;
+  font-weight: bold;
+}
+.highlight .nt {
+  color: #f92672;
+}
+.highlight {
+  color: #f8f8f2;
+  background-color: #49483e;
 }
     </style>
     <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
@@ -91,7 +223,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;]">
+  <body class="index" data-languages="[&quot;python&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -101,8 +233,6 @@
     <div class="tocify-wrapper">
       <img src="images/logo.png" />
         <div class="lang-selector">
-              <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
               <a href="#" data-language-name="python">python</a>
         </div>
         <div class="search">
@@ -112,8 +242,7 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+            <li><a mailto:'awesome@popily.com'>Get An API Key</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
@@ -121,21 +250,62 @@
       <div class="content">
         <h1 id="introduction">Introduction</h1>
 
+<h1 id="super-fast-example">Super Fast Example</h1>
+
+<h1 id="quick-start-guide">Quick Start Guide</h1>
+
+<h2 id="authentication">Authentication</h2>
+
+<h2 id="creating-sources">Creating Sources</h2>
+
+<h2 id="creating-users">Creating Users</h2>
+
+<h2 id="retrieving-insights">Retrieving Insights</h2>
+
+<h1 id="sources">Sources</h1>
+
+<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+
+<p><code class="prettyprint">API Endpoint http://example.com/api/kittens</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>include_cats</td>
+<td>false</td>
+<td>If set to true, the result will also include cats.</td>
+</tr>
+<tr>
+<td>available</td>
+<td>true</td>
+<td>If set to false, the result will include kittens that have already been adopted.</td>
+</tr>
+</tbody></table>
+
+<h1 id="vectors">Vectors</h1>
+
+<h1 id="insights">Insights</h1>
+
+<h1 id="users">Users</h1>
+
+<h1 id="linelineline">LINELINELINE</h1>
+
 <p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
 
 <p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
 
 <p>This example API documentation page was created with <a href="https://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&rsquo;s documentation.</p>
 
-<h1 id="authentication">Authentication</h1>
+<h1 id="super-fast-example">Super Fast Example</h1>
 
 <blockquote>
 <p>To authorize, use this code:</p>
 </blockquote>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
 <pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
 
 <span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
@@ -159,51 +329,11 @@ curl <span class="s2">"api_endpoint_here"</span>
 You must replace <code>meowmeowmeow</code> with your personal API key.
 </aside>
 
-<h1 id="kittens">Kittens</h1>
-
-<h2 id="get-all-kittens">Get All Kittens</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
-
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre>
-
-<p>This endpoint retrieves all kittens.</p>
-
-<h3 id="http-request">HTTP Request</h3>
+<h1 id="authentication">Authentication</h1>
 
 <p><code class="prettyprint">GET http://example.com/api/kittens</code></p>
 
-<h3 id="query-parameters">Query Parameters</h3>
+<h1 id="creating-sources">Creating Sources</h1>
 
 <table><thead>
 <tr>
@@ -228,12 +358,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 Remember — a happy kitten is an authenticated kitten!
 </aside>
 
-<h2 id="get-a-specific-kitten">Get a Specific Kitten</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
+<h2 id="creating-users">Creating Users</h2>
 <pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
 
 <span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
@@ -279,10 +404,6 @@ Remember — a happy kitten is an authenticated kitten!
 
           <h1 id="errors">Errors</h1>
 
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the `includes` folder and add them to the top of your `index.md`&rsquo;s frontmatter. Files are included in the order listed.</aside>
-
-<p>The Kittn API uses the following error codes:</p>
-
 <table><thead>
 <tr>
 <th>Error Code</th>
@@ -314,14 +435,6 @@ Remember — a happy kitten is an authenticated kitten!
 <td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
 </tr>
 <tr>
-<td>410</td>
-<td>Gone &ndash; The kitten requested has been removed from our servers</td>
-</tr>
-<tr>
-<td>418</td>
-<td>I&rsquo;m a teapot</td>
-</tr>
-<tr>
 <td>429</td>
 <td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slow down!</td>
 </tr>
@@ -338,8 +451,6 @@ Remember — a happy kitten is an authenticated kitten!
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
                 <a href="#" data-language-name="python">python</a>
           </div>
       </div>
