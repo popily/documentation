@@ -150,8 +150,49 @@
 <p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
 
 <h2 id="add-data">Add data</h2>
+<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily</span>
 
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+<span class="n">popily_api</span> <span class="o">=</span> <span class="n">popily</span><span class="o">.</span><span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR API TOKEN'</span><span class="p">)</span>
+
+<span class="c"># Give it a title (optional)</span>
+<span class="n">title</span> <span class="o">=</span> <span class="s">'DC Comics Data'</span>
+
+<span class="c"># Define the column types</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s">'column_header'</span><span class="p">:</span> <span class="s">'name'</span><span class="p">,</span>
+        <span class="s">'data_type'</span><span class="p">:</span> <span class="s">'rowlabel'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s">'column_header'</span><span class="p">:</span> <span class="s">'ALIGN'</span><span class="p">,</span>
+        <span class="s">'data_type'</span><span class="p">:</span> <span class="s">'category'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s">'column_header'</span><span class="p">:</span> <span class="s">'EYE'</span><span class="p">,</span>
+        <span class="s">'data_type'</span><span class="p">:</span> <span class="s">'category'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s">'column_header'</span><span class="p">:</span> <span class="s">'HAIR'</span><span class="p">,</span>
+        <span class="s">'data_type'</span><span class="p">:</span> <span class="s">'category'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s">'column_header'</span><span class="p">:</span> <span class="s">'SEX'</span><span class="p">,</span>
+        <span class="s">'data_type'</span><span class="p">:</span> <span class="s">'category'</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="c"># Example connection to a database column called 'characters'</span>
+<span class="n">connection_string</span> <span class="o">=</span> <span class="s">'mysql://username:password@host:port/database'</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s">'SELECT * FROM characters'</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">popily_api</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
+                        <span class="n">connection_string</span><span class="o">=</span><span class="n">connection_string</span><span class="p">,</span>
+                        <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
+                        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+</code></pre>
+
+<p>A (data) source resource is data a user has added to Popily and can be populated from a file, a database connection, or a JSON API.</p>
+
+<p>All source resources in Popily must contain a description of the type of data in each column. Popily understands more than just integers and strings, it can also work with higher-level concepts like categories, US states or currency. We’re always adding to this list, but these are the available types as of today.</p>
 
 <h2 id="list-data">List data</h2>
 
