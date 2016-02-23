@@ -308,24 +308,24 @@
 <p>Here is an example of a JSON object for creating a new source. Note that the JSON object contains column header and column data type for every row in the data source.</p>
 </blockquote>
 <pre class="highlight plaintext"><code>{
-    'url': 'https://example.com/sales.csv',
-    'title': 'Sales Data',
-    'vector_set': [
+    "url": "https://example.com/sales.csv",
+    "title": "Sales Data",
+    "vector_set": [
         {
-            'column_header': 'Date',
-            'data_type': 'datetime'
+            "column_header": "Date",
+            "data_type": "datetime"
         },
         {
-            'column_header': 'Manager',
-            'data_type': 'category'
+            "column_header": "Manager",
+            "data_type": "category"
         },
         {
-            'column_header': 'Store ID',
-            'data_type': 'rowlabel'
+            "column_header": "Store ID",
+            "data_type": "rowlabel"
         },
         {
-            'column_header': 'Sales',
-            'data_type': 'currency'
+            "column_header": "Sales",
+            "data_type": "currency"
         },
     ]
 }
@@ -694,13 +694,34 @@
 <td>list</td>
 <td>List of column names in a source.</td>
 </tr>
+<tr>
+<td>insight_type</td>
+<td>string</td>
+<td>The type of analysis used in the insights.</td>
+</tr>
 </tbody></table>
 
 <h2 id="get_insight">get_insight</h2>
+<pre class="highlight python"><code><span class="c"># Get insight 249985</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">get_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+</code></pre>
 
 <blockquote>
-<p>Example</p>
+<p>Example API response</p>
 </blockquote>
+<pre class="highlight plaintext"><code>{
+    "embed_url": "https://popily.com/widget/chart/align-hair/-/?style=compact-500-500&amp;app_id=18&amp;sig=8b7c8e557a9ab1bcf4d5d762dda773d2&amp;timestamp=1456113107",
+    "x_label": "ALIGN",
+    "y_label": "Number of Records",
+    "filters_key": "",
+    "source": 429,
+    "title": "Number of ALIGN grouped by SEX",
+    "insight_type_category": "count",
+    "id": 249985,
+    "z_label": "",
+    "insight_type": "count_by_category_by_category"
+}
+</code></pre>
 
 <p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
 
@@ -713,24 +734,41 @@
 </tr>
 </thead><tbody>
 <tr>
-<td>d</td>
+<td>id</td>
 <td>d</td>
 <td>d</td>
 <td>d</td>
 </tr>
 <tr>
+<td>height</td>
 <td>d</td>
+<td>d</td>
+<td>d</td>
+</tr>
+<tr>
+<td>width</td>
+<td>d</td>
+<td>d</td>
+<td>d</td>
+</tr>
+<tr>
+<td>filters</td>
 <td>d</td>
 <td>d</td>
 <td>d</td>
 </tr>
 </tbody></table>
 
-<h2 id="customize_insight">customize_insight</h2>
+<p><code class="prettyprint">&lt;iframe frameborder=&quot;0&quot; height=&quot;500&quot; width=&quot;500&quot; src=&quot;https://popily.com/widget/chart/hair-align-2/-/?style=compact-500-500&amp;app_id=18&amp;sig=63bb87883e20548076aefac271911c13&amp;timestamp=1456114892&quot;&gt;&lt;/iframe&gt;</code></p>
 
-<blockquote>
-<p>Example</p>
-</blockquote>
+<h2 id="customize_insight">customize_insight</h2>
+<pre class="highlight python"><code><span class="c"># Customize insight 249985</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">customize_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span>
+                         <span class="n">title</span><span class="o">=</span><span class="s">'This Chart is Awesome'</span><span class="p">,</span>
+                         <span class="n">x_label</span><span class="o">=</span><span class="s">'Goodness'</span><span class="p">,</span>
+                         <span class="n">y_label</span><span class="o">=</span><span class="s">'Genders'</span><span class="p">,</span>
+                         <span class="n">category_order</span><span class="o">=</span><span class="s">'z-a'</span><span class="p">)</span>
+</code></pre>
 
 <p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
 
@@ -738,19 +776,26 @@
 <tr>
 <th>Parameter</th>
 <th>Format</th>
-<th>Default</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>d</td>
-<td>d</td>
+<td>title</td>
 <td>d</td>
 <td>d</td>
 </tr>
 <tr>
+<td>x_label</td>
 <td>d</td>
 <td>d</td>
+</tr>
+<tr>
+<td>y_label</td>
+<td>d</td>
+<td>d</td>
+</tr>
+<tr>
+<td>category_order</td>
 <td>d</td>
 <td>d</td>
 </tr>
