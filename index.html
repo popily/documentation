@@ -435,22 +435,255 @@
 <p>We’re exploring this data through the API, but once a data source has been added, you can also explore it through the Popily user interface. In the API response after you create a new data source, you’ll see an explore_path property, which is where you’ll find your new source via the interface.</p>
 
 <h2 id="list-sources">List sources</h2>
+<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily_api</span>
 
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+<span class="c"># Get source with id 34242</span>
+<span class="n">popily_api</span><span class="o">.</span><span class="n">get_sources</span><span class="p">()</span>
+</code></pre>
+
+<blockquote>
+<p>Example API response</p>
+</blockquote>
+<pre class="highlight plaintext"><code>{"count": 1,
+ "next": "http://popily.com/api/sources/?page=2",
+ "previous": None,
+ "results": [{"columns": [{"column_header": "SEX",
+             "data_type": "category",
+             "id": 29413,
+             "score": 0.0},
+            {"column_header": "HAIR",
+             "data_type": "category",
+             "id": 29412,
+             "score": 0.0},
+            {"column_header": "EYE",
+             "data_type": "category",
+             "id": 29411,
+             "score": 0.0},
+            {"column_header": "ALIGN",
+             "data_type": "category",
+             "id": 29410,
+             "score": 0.0},
+            {"column_header": "name",
+             "data_type": "rowlabel",
+             "id": 29409,
+             "score": 0.0}],
+             "created_by": 3,
+             "description": None,
+             "explore_path": "/explore/source/dc-wikia-data-3/discoveries/",
+             "id": 2287,
+             "sheetname": None,
+             "slug": "dc-wikia-data-3",
+             "status": "inspecting",
+             "title": "DC Comics Data",
+             "url": None}]
+}
+</code></pre>
+
+<p>Lists all source resources created by a user.</p>
+
+<h3 id="api-response-objects">API response objects</h3>
+
+<ul>
+<li><strong>count:</strong> Number of source resources</li>
+<li><strong>next:</strong> Pagination marker</li>
+<li><strong>previous:</strong> Pagination marker</li>
+<li><strong>results:</strong> (see <a href="#get_source">get_source</a> for full explanation)</li>
+</ul>
 
 <h1 id="insights-endpoint">Insights endpoint</h1>
 
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+<p>When <code class="prettyprint">source</code> resources are created in Popily, our Mechanical Turk technology creates a large sample space of relationships between columns. In Popily, each of these relationships is called an <code class="prettyprint">insight</code> and is represented by a <code class="prettyprint">chart</code>.</p>
 
-<h2 id="list-charts">List charts</h2>
+<p>For most users, the workflow will be:</p>
 
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+<ol>
+<li><a href="#get-insight">Retrieve the insight</a> for the desired relationship(s)</li>
+<li><a href="#customize-chart">Customize the insight&rsquo;s chart</a> (e.g. removing values, datetime grouping)</li>
+</ol>
 
-<h2 id="get-chart">Get chart</h2>
+<h2 id="list-insights">List insights</h2>
+<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily_api</span>
+
+<span class="c"># Get insights about Column A and Column B from sourcev 34242</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">get_insights</span><span class="p">(</span><span class="mi">324442</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'Column A'</span><span class="p">,</span><span class="s">'Column B'</span><span class="p">])</span>
+</code></pre>
+
+<blockquote>
+<p>Example API response</p>
+</blockquote>
+<pre class="highlight plaintext"><code>{
+    "count": 1,
+    "previous": null,
+    "results": [{
+        "title": "Number of ALIGN grouped by SEX",
+        "x_label": "ALIGN",
+        "y_label": "Number of Records",
+        "filters_key": "",
+        "source": 429,
+        "insight_type_category": "count",
+        "id": 249985,
+        "z_label": "",
+        "insight_type": "count_by_category_by_category"
+    }],
+    "next": null
+}
+</code></pre>
+
+<p>Retrieves a list of insights for a source resource.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Format</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>source</td>
+<td>integer</td>
+<td>id for the source.</td>
+</tr>
+<tr>
+<td>columns</td>
+<td>list</td>
+<td>List of column names in a source.</td>
+</tr>
+<tr>
+<td>insight_type</td>
+<td>string</td>
+<td>The type of analysis used in the insights.</td>
+</tr>
+</tbody></table>
+
+<h2 id="get-insight">Get insight</h2>
+<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily_api</span>
+
+<span class="c"># Get insight 249985</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">get_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+</code></pre>
+
+<blockquote>
+<p>Example API response</p>
+</blockquote>
+<pre class="highlight plaintext"><code>{
+    "embed_url": "https://popily.com/widget/chart/align-hair/-/?style=compact-500-500&amp;app_id=18&amp;sig=8b7c8e557a9ab1bcf4d5d762dda773d2&amp;timestamp=1456113107",
+    "x_label": "ALIGN",
+    "y_label": "Number of Records",
+    "filters_key": "",
+    "source": 429,
+    "title": "Number of ALIGN grouped by SEX",
+    "insight_type_category": "count",
+    "id": 249985,
+    "z_label": "",
+    "insight_type": "count_by_category_by_category"
+}
+</code></pre>
+
+<p>Retrieves details on a single insight.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Format</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>string</td>
+<td>Insight UID</td>
+<td></td>
+</tr>
+<tr>
+<td>height</td>
+<td>integer</td>
+<td>Height in pixels</td>
+<td></td>
+</tr>
+<tr>
+<td>width</td>
+<td>integer</td>
+<td>Width in pixels</td>
+<td></td>
+</tr>
+<tr>
+<td>filters</td>
+<td>JSON object</td>
+<td>Data filters applied to insight. See <a href="#filtering-chart-data">insight filters</a>.</td>
+<td></td>
+</tr>
+</tbody></table>
+
+<p>If you want to visualize the data yourself you can get the x, y and z values (see the insight documentation for more details), or you can use the charts Popily generates for you via the insight’s embed_url property. Just drop it in an iframe:</p>
+
+<p><code class="prettyprint">&lt;iframe frameborder=&quot;0&quot; height=&quot;500&quot; width=&quot;500&quot; src=&quot;https://popily.com/widget/chart/hair-align-2/-/?style=compact-500-500&amp;app_id=18&amp;sig=63bb87883e20548076aefac271911c13&amp;timestamp=1456114892&quot;&gt;&lt;/iframe&gt;</code></p>
 
 <h2 id="customize-chart">Customize chart</h2>
+<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily_api</span>
+
+<span class="c"># Customize insight 249985</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">customize_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span>
+                         <span class="n">title</span><span class="o">=</span><span class="s">'This Chart is Awesome'</span><span class="p">,</span>
+                         <span class="n">x_label</span><span class="o">=</span><span class="s">'Goodness'</span><span class="p">,</span>
+                         <span class="n">y_label</span><span class="o">=</span><span class="s">'Genders'</span><span class="p">,</span>
+                         <span class="n">category_order</span><span class="o">=</span><span class="s">'z-a'</span><span class="p">)</span>
+</code></pre>
+
+<p>Customize the display of a single insight. Note, currently customizations are bound to an insight and thus an insight can only have a single customization.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Format</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>title</td>
+<td>string</td>
+<td>Custom chart title</td>
+</tr>
+<tr>
+<td>x_label</td>
+<td>string</td>
+<td>Custom x label</td>
+</tr>
+<tr>
+<td>y_label</td>
+<td>string</td>
+<td>Custom y label</td>
+</tr>
+<tr>
+<td>category_order</td>
+<td>string</td>
+<td>Custom ordering of categories. Allowed values: &lsquo;a-z&rsquo;, &#39;z-a&rsquo;, &#39;asc&rsquo;, and &#39;dsc&rsquo;</td>
+</tr>
+</tbody></table>
 
 <h2 id="filtering-chart-data">Filtering chart data</h2>
+<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily_api</span>
+
+<span class="n">filters</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s">'column'</span><span class="p">:</span> <span class="s">'SEX'</span><span class="p">,</span>
+        <span class="s">'values'</span><span class="p">:</span> <span class="p">[</span><span class="s">'Genderless Characters'</span><span class="p">,</span><span class="s">'Transgender Characters'</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="n">insight</span> <span class="o">=</span> <span class="n">popily</span><span class="o">.</span><span class="n">get_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="n">filters</span><span class="p">)</span>
+</code></pre>
+
+<p>Sometimes you want to tell a more specific story. With Popily you can apply filters to any insight or list or insights, and then assign customizations that are specific to the filters you’ve applied. Filters allow you to control the data within a relationship insight.</p>
+
+<p>Example filter param to include only &#39;Genderless Characters&rsquo; and &#39;Transgender Characters&rsquo; in a column titled <code class="prettyprint">SEX</code>:</p>
+
+<p><code class="prettyprint">[
+    {
+        &#39;column&#39;: &#39;SEX&#39;,
+        &#39;values&#39;: [&#39;Genderless Characters&#39;,&#39;Transgender Characters&#39;]
+    }
+]</code></p>
 
 <h1 id="users-endpoint">Users endpoint</h1>
 
@@ -802,27 +1035,27 @@
 </thead><tbody>
 <tr>
 <td>id</td>
-<td>d</td>
-<td>d</td>
-<td>d</td>
+<td>string</td>
+<td>Insight UID</td>
+<td></td>
 </tr>
 <tr>
 <td>height</td>
-<td>d</td>
-<td>d</td>
-<td>d</td>
+<td>integer</td>
+<td>Height in pixels</td>
+<td></td>
 </tr>
 <tr>
 <td>width</td>
-<td>d</td>
-<td>d</td>
-<td>d</td>
+<td>integer</td>
+<td>Width in pixels</td>
+<td></td>
 </tr>
 <tr>
 <td>filters</td>
-<td>d</td>
-<td>d</td>
-<td>d</td>
+<td>JSON object</td>
+<td>Data filters applied to insight. See <a href="#filtering-chart-data">insight filters</a>.</td>
+<td></td>
 </tr>
 </tbody></table>
 
@@ -850,29 +1083,37 @@
 </thead><tbody>
 <tr>
 <td>title</td>
-<td>d</td>
-<td>d</td>
+<td>string</td>
+<td>Custom chart title</td>
 </tr>
 <tr>
 <td>x_label</td>
-<td>d</td>
-<td>d</td>
+<td>string</td>
+<td>Custom x label</td>
 </tr>
 <tr>
 <td>y_label</td>
-<td>d</td>
-<td>d</td>
+<td>string</td>
+<td>Custom y label</td>
 </tr>
 <tr>
 <td>category_order</td>
-<td>d</td>
-<td>d</td>
+<td>string</td>
+<td>Custom ordering of categories. Allowed values: &#39;a-z&rsquo;, &#39;z-a&rsquo;, &#39;asc&rsquo;, and &#39;dsc&rsquo;</td>
 </tr>
 </tbody></table>
 
 <h1 id="getting-help">Getting help</h1>
 
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+<p>We love developers because we <em>are</em> developers, so we made sure you can get help in the ways you want:</p>
+
+<ul>
+<li><strong>Slack:</strong> Ask a question in our slack community room</li>
+<li><strong>Twitter:</strong> <a href="https://twitter.com/popilyteam">@popilyteam</a>, <a href="https://twitter.com/jonathonmorgan">@jonathonmorgan</a>, <a href="https://twitter.com/chrisalbon">@chrisalbon</a></li>
+<li><strong>Email:</strong> &#97;&#119;&#101;&#115;&#111;&#109;&#101;&#64;&#112;&#111;&#112;&#105;&#108;&#121;&#46;&#99;&#111;&#109;, &#106;&#111;&#110;&#97;&#116;&#104;&#111;&#110;&#64;&#112;&#111;&#112;&#105;&#108;&#121;&#46;&#99;&#111;&#109;, &#99;&#104;&#114;&#105;&#115;&#64;&#112;&#111;&#112;&#105;&#108;&#121;&#46;&#99;&#111;&#109;</li>
+</ul>
+
+<p>Code on!</p>
 
       </div>
       <div class="dark-box">
