@@ -6,8 +6,8 @@ language_tabs:
   - http
 
 toc_footers:
-  - <a href='http://popily.com'>Live chat with us on Slack</a>!
-  - <a href='http://popily.com'>Get an API key</a>
+  - API Version 1.0
+  - API Docs Version 1.0
 
 includes:
 
@@ -390,15 +390,45 @@ Example filter param to include only 'Genderless Characters' and 'Transgender Ch
 
 # Users endpoint
 
-Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.
+You can create user accounts to associate source and insight resources with specific users of your application. Your authentication token allows you to access the source and insight objects of any users you create.
 
 ## Create users
 
-Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.
+```python
+import requests
+
+r = requests.post('https://popily.com/api/users/',
+                    json={'username':'testing'},
+                    headers={'Authorization': 'Token ' + <YOUR API TOKEN>})
+```
+
+Create a user resource.
+
+Parameter | Format | Description
+--------- | ------- | -----------
+json | JSON object | Arguments for user creation.
+
+Arguments are passed via a json object:
+
+- **username:** Username
+- **email:** Email address. Optional for API, required for Popily.com.
+- **groups_member:** List of groups to which the user belongs. Any user you create automatically belongs to your default group.
 
 ## List users
 
-Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.
+```python
+r = requests.get('https://popily.com/api/users/',
+                  headers={'Authorization': 'Token ' + <YOUR API TOKEN>})
+```
+
+List all user resources associated with an API token.
+
+### API response objects
+
+- **id:** UID of the User object.
+- **username:** We'll force this to be unique when we create the User object.
+- **email:** Email address. Optional for API, required for Popily.com.
+- **groups_member:** List of groups to which the user belongs.
 
 # Python client
 
