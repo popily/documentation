@@ -687,15 +687,53 @@
 
 <h1 id="users-endpoint">Users endpoint</h1>
 
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+<p>You can create user accounts to associate source and insight resources with specific users of your application. Your authentication token allows you to access the source and insight objects of any users you create.</p>
 
 <h2 id="create-users">Create users</h2>
+<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">requests</span>
 
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">'https://popily.com/api/users/'</span><span class="p">,</span>
+                    <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s">'username'</span><span class="p">:</span><span class="s">'testing'</span><span class="p">},</span>
+                    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'Authorization'</span><span class="p">:</span> <span class="s">'Token '</span> <span class="o">+</span> <span class="o">&lt;</span><span class="n">YOUR</span> <span class="n">API</span> <span class="n">TOKEN</span><span class="o">&gt;</span><span class="p">})</span>
+</code></pre>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Format</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>json</td>
+<td>JSON object</td>
+<td>Arguments for user creation.</td>
+</tr>
+</tbody></table>
+
+<p>Create a user resource. Arguments are passed via a json object:</p>
+
+<ul>
+<li><strong>username:</strong> Username</li>
+<li><strong>email:</strong> Email address. Optional for API, required for Popily.com.</li>
+<li><strong>groups_member:</strong> List of groups to which the user belongs. Any user you create automatically belongs to your default group.</li>
+</ul>
 
 <h2 id="list-users">List users</h2>
+<pre class="highlight python"><code><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'https://popily.com/api/users/'</span><span class="p">,</span>
+                  <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'Authorization'</span><span class="p">:</span> <span class="s">'Token '</span> <span class="o">+</span> <span class="o">&lt;</span><span class="n">YOUR</span> <span class="n">API</span> <span class="n">TOKEN</span><span class="o">&gt;</span><span class="p">})</span>
+</code></pre>
 
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+<p>List all user resources associated with an API token.</p>
+
+<h3 id="api-response-objects">API response objects</h3>
+
+<ul>
+<li><strong>id:</strong> UID of the User object.</li>
+<li><strong>username:</strong> We&rsquo;ll force this to be unique when we create the User object.</li>
+<li><strong>email:</strong> Email address. Optional for API, required for Popily.com.</li>
+<li><strong>groups_member:</strong> List of groups to which the user belongs.</li>
+</ul>
 
 <h1 id="python-client">Python client</h1>
 
