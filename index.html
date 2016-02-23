@@ -124,6 +124,32 @@
 
 <p>This API reference provides information on interacting with Popily&rsquo;s API endpoints.</p>
 
+<blockquote>
+<h3 id="how-does-popily-work-tl-dr-edition">How does Popily work? TL;DR Edition</h3>
+
+<p>In Popily, <strong>sources</strong> (data) are broken down into <strong>insights</strong> (relationships) which are visualized with <strong>charts</strong> (charts).</p>
+</blockquote>
+
+<h3 id="some-terms-used-in-these-docs">Some terms used in these docs:</h3>
+
+<ul>
+<li><strong><code class="prettyprint">source</code></strong>: A data resource created by a <code class="prettyprint">user</code> sending their data to Popily.
+
+<ul>
+<li><em>Example: Data on annual sales.</em></li>
+</ul></li>
+<li><strong><code class="prettyprint">insight</code></strong>: A relationship between columns in a <code class="prettyprint">source</code>.
+
+<ul>
+<li><em>Example: Average of sales by manager.</em></li>
+</ul></li>
+<li><strong><code class="prettyprint">chart</code></strong>: A chart visualizing a particular <code class="prettyprint">insight</code>.
+
+<ul>
+<li><em>Example: Bar chart representing the relationship between sales and managers.</em></li>
+</ul></li>
+</ul>
+
 <h1 id="authentication">Authentication</h1>
 
 <p>Popily&rsquo;s API supports authentication through an API key. <a href="#api-key">API keys</a> can be obtained through an account with Popily.</p>
@@ -134,7 +160,7 @@
                     <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'Authorization'</span><span class="p">:</span> <span class="s">'Token '</span> <span class="o">+</span> <span class="n">YOUR</span> <span class="n">TOKEN</span><span class="p">})</span>
 </code></pre>
 
-<p>You authenticate with Popily using a token passed in the Authorization HTTP header. If you haven&rsquo;t been assigned a token, please contact us and we&rsquo;ll hook you up.</p>
+<p>You authenticate with Popily using a token passed in the <a href="#authentication">Authorization HTTP header</a>. If you haven&rsquo;t been assigned a token, please contact us and we&rsquo;ll hook you up.</p>
 
 <p>Authentication includes an HTTP header <code class="prettyprint">Authorization: Token 12345</code>, so Popily knows who is making the request. We strongly recommend keeping this token to yourself, so think twice about making requests directly from your front-end code (even though that is technically possible).</p>
 
@@ -209,7 +235,7 @@
 
 <h2 id="pagination">Pagination</h2>
 
-<p>Popily uses pagination when <code class="prettyprint">GET</code> requests returns a list of objects (e.g. insights, sources). To get all objects in a paginated list of objects, you will need to paginate through the list of objects.</p>
+<p>Popily uses pagination when <code class="prettyprint">GET</code> requests returns a list of resources (e.g. <a href="#list-insights">insights</a>, <a href="#list-sources">sources</a>). To get all resources in a paginated list, you will need to paginate through the list.</p>
 
 <h1 id="sources-endpoint">Sources endpoint</h1>
 
@@ -256,7 +282,7 @@
                         <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
 </code></pre>
 
-<p>A (data) source resource is data a user has added to Popily and can be populated from a file, a database connection, or a JSON API. When you add a source to Popily, we&rsquo;ll automatically create a resource, inspect the resource, perform some calculations, and make a sample space of insight resources that you can browse in the application UI (or retrieve via the insights endpoint).</p>
+<p>A (data) source resource is data a user has added to Popily and can be populated from a file, a database connection, or a JSON API. When you add a source to Popily, we&rsquo;ll automatically create a resource, inspect the resource, perform some calculations, and make a sample space of insight resources that you can browse in the application UI (or retrieve via the <a href="#insights-endpoint">insights endpoint</a>).</p>
 
 <table><thead>
 <tr>
@@ -479,7 +505,7 @@
 }
 </code></pre>
 
-<p>Lists all source resources created by a user.</p>
+<p>Lists all <a href="#sources-endpoint">source resources</a> created by a user.</p>
 
 <h3 id="api-response-objects">API response objects</h3>
 
