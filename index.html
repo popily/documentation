@@ -206,13 +206,13 @@
 
 <p><code class="prettyprint">GET</code> arguments must be passed as params and <code class="prettyprint">POST</code> arguments must be passed as JSON with correct Content-Type headers.</p>
 
-<h2 id="making-requests">Making requests</h2>
+<h2 id="pagination">Pagination</h2>
 
 <p>Popily uses pagination when <code class="prettyprint">GET</code> requests returns a list of objects (e.g. insights, sources). To get all objects in a paginated list of objects, you will need to paginate through the list of objects.</p>
 
-<h1 id="data-sources-endpoint">Data sources endpoint</h1>
+<h1 id="sources-endpoint">Sources endpoint</h1>
 
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+<p>The sources endpoint can be used to create new data sources or interact with existing sources. Resources in this endpoint are bound to user accounts for the sake of authentication.</p>
 
 <h2 id="create-source">Create source</h2>
 <pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily</span>
@@ -468,53 +468,290 @@
 <p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
 
 <h2 id="install-client">Install client</h2>
-<pre class="highlight plaintext"><code>pip install popily-api
+<pre class="highlight python"><code><span class="n">pip</span> <span class="n">install</span> <span class="n">popily</span><span class="o">-</span><span class="n">api</span>
 </code></pre>
 
 <p>Installing the Popily API client is easy with the package manager <a href="https://pypi.python.org/pypi/pip">pip</a>.</p>
 
 <h2 id="add_source">add_source</h2>
+<pre class="highlight python"><code>
+<span class="c"># Three examples of add_source</span>
+
+<span class="kn">import</span> <span class="nn">popily_api</span>
+
+<span class="n">popily</span> <span class="o">=</span> <span class="n">popily_api</span><span class="o">.</span><span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR API TOKEN'</span><span class="p">)</span>
+
+<span class="c"># Give it a title (optional)</span>
+<span class="n">title</span> <span class="o">=</span> <span class="s">'DC Comics Data'</span>
+
+<span class="c"># Define the column types</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s">'column_header'</span><span class="p">:</span> <span class="s">'name'</span><span class="p">,</span>
+        <span class="s">'data_type'</span><span class="p">:</span> <span class="s">'rowlabel'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s">'column_header'</span><span class="p">:</span> <span class="s">'HAIR'</span><span class="p">,</span>
+        <span class="s">'data_type'</span><span class="p">:</span> <span class="s">'category'</span>
+    <span class="p">},</span>
+<span class="p">]</span>
+
+<span class="c"># If the data is in a CSV file locally</span>
+<span class="n">file_data</span> <span class="o">=</span> <span class="p">{</span><span class="s">'data'</span><span class="p">:</span> <span class="nb">open</span><span class="p">(</span><span class="s">'/path/to/the/file.csv'</span><span class="p">)}</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">popily</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span><span class="n">file_obj</span><span class="o">=</span><span class="n">file_data</span><span class="p">,</span>
+                                <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+
+<span class="c"># If the dataset is remote</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s">'https://example.com/dataset.csv'</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">popily</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+                                <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+
+<span class="c"># If the data is from an SQL query</span>
+<span class="n">connection_string</span> <span class="o">=</span> <span class="s">'mysql://username:password@host:port/database'</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s">'SELECT * FROM TableA'</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">popily</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
+                        <span class="n">connection_string</span><span class="o">=</span><span class="n">connection_string</span><span class="p">,</span>
+                        <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
+                        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+</code></pre>
 
 <p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
-
-<h2 id="get_sources">get_sources</h2>
-
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
-
-<h2 id="get_source">get_source</h2>
-
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
-
-<h2 id="get_insights">get_insights</h2>
-
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
-
-<h2 id="get_insight">get_insight</h2>
-
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
-
-<h2 id="customize_insight">customize_insight</h2>
-
-<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
-
-<p><code class="prettyprint">API Endpoint http://example.com/api/kittens</code></p>
 
 <table><thead>
 <tr>
 <th>Parameter</th>
+<th>Format</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>url</td>
+<td>string</td>
+<td>Full URL where the data file or API endpoint can be accessed.</td>
+</tr>
+<tr>
+<td>title</td>
+<td>string</td>
+<td>Human-readable name of the source.</td>
+</tr>
+<tr>
+<td>vector_set</td>
+<td>JSON object</td>
+<td><a href="#data-types">A list of column headers and their data types</a>.</td>
+</tr>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>The type of data store providing data to the source: <em>e_csv</em> (CSV file accessed via URL) <em>e_xls</em> (Excel file accessed via URL) <em>e_json</em> (JSON accessed via URL) <em>sql</em> (results from SQL query). When absent, type is inferred.</td>
+</tr>
+<tr>
+<td>sheetname</td>
+<td>string</td>
+<td>Used when the data source is an Excel file. Denotes the name of the sheet to use.</td>
+</tr>
+<tr>
+<td>connection_string</td>
+<td>string</td>
+<td>Full connection string to your MySQL or Postgres database.</td>
+</tr>
+<tr>
+<td>query</td>
+<td>string</td>
+<td>The SQL query you&rsquo;d like to run on your database.</td>
+</tr>
+</tbody></table>
+
+<h2 id="get_sources">get_sources</h2>
+
+<blockquote>
+<p>Example</p>
+</blockquote>
+
+<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Format</th>
 <th>Default</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>d</td>
+<td>d</td>
+<td>d</td>
+<td>d</td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>d</td>
+<td>d</td>
+<td>d</td>
+<td>d</td>
+</tr>
+</tbody></table>
+
+<h2 id="get_source">get_source</h2>
+<pre class="highlight python"><code><span class="c"># Get source with id 34242</span>
+<span class="n">popily_api</span><span class="o">.</span><span class="n">get_source</span><span class="p">(</span><span class="mi">34242</span><span class="p">)</span>
+</code></pre>
+
+<blockquote>
+<p>Example API response</p>
+</blockquote>
+<pre class="highlight plaintext"><code>{
+  "columns": [{"column_header": "HAIR",
+              "data_type": "category",
+              "id": 29382,
+              "score": 0.183804993880959},
+              {"column_header": "ALIGN",
+               "data_type": "category",
+               "id": 29380,
+               "score": 0.17228792581526},
+              {"column_header": "SEX",
+               "data_type": "category",
+               "id": 29383,
+               "score": 0.157287131801953},
+              {"column_header": "EYE",
+               "data_type": "category",
+               "id": 29381,
+               "score": 0.113107718497747},
+              {"column_header": "name",
+               "data_type": "rowlabel",
+               "id": 29379,
+               "score": 0.0}],
+  "created_by": 3,
+  "description": None,
+  "explore_path": u"/explore/source/dc-wikia-data/discoveries/",
+  "id": 2279,
+  "sheetname": None,
+  "slug": "dc-wikia-data",
+  "status": "finished",
+  "title": "DC Comics Data",
+  "url": None
+}
+</code></pre>
+
+<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Format</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>source</td>
+<td>integer</td>
+<td>id for the source.</td>
+</tr>
+</tbody></table>
+
+<h2 id="get_insights">get_insights</h2>
+<pre class="highlight python"><code><span class="c"># Get insights about Column A and Column B from source 34242</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">get_insights</span><span class="p">(</span><span class="mi">324442</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'Column A'</span><span class="p">,</span><span class="s">'Column B'</span><span class="p">])</span>
+</code></pre>
+
+<blockquote>
+<p>Example API response</p>
+</blockquote>
+<pre class="highlight plaintext"><code>{
+    "count": 1,
+    "previous": null,
+    "results": [{
+        "title": "Number of ALIGN grouped by SEX",
+        "x_label": "ALIGN",
+        "y_label": "Number of Records",
+        "filters_key": "",
+        "source": 429,
+        "insight_type_category": "count",
+        "id": 249985,
+        "z_label": "",
+        "insight_type": "count_by_category_by_category"
+    }],
+    "next": null
+}
+</code></pre>
+
+<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Format</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>source</td>
+<td>integer</td>
+<td>id for the source.</td>
+</tr>
+<tr>
+<td>columns</td>
+<td>list</td>
+<td>List of column names in a source.</td>
+</tr>
+</tbody></table>
+
+<h2 id="get_insight">get_insight</h2>
+
+<blockquote>
+<p>Example</p>
+</blockquote>
+
+<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Format</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>d</td>
+<td>d</td>
+<td>d</td>
+<td>d</td>
+</tr>
+<tr>
+<td>d</td>
+<td>d</td>
+<td>d</td>
+<td>d</td>
+</tr>
+</tbody></table>
+
+<h2 id="customize_insight">customize_insight</h2>
+
+<blockquote>
+<p>Example</p>
+</blockquote>
+
+<p>Lorem ipsum dolor sit amet, no est vero porro. Eos congue utinam noster ea, agam consectetuer sed ut. Pro ne meliore voluptua invidunt, hinc dolorum vix at. Et dicta constituam vis, ne duis postea aperiri sea. Eu vel mandamus definitionem, nemore splendide pri et. At admodum neglegentur his.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Format</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>d</td>
+<td>d</td>
+<td>d</td>
+<td>d</td>
+</tr>
+<tr>
+<td>d</td>
+<td>d</td>
+<td>d</td>
+<td>d</td>
 </tr>
 </tbody></table>
 
