@@ -276,7 +276,7 @@
 <td>Human-readable name of the source.</td>
 </tr>
 <tr>
-<td>vector_set</td>
+<td>columns</td>
 <td>JSON object</td>
 <td><a href="#data-types">A list of column headers and their data types</a>.</td>
 </tr>
@@ -310,7 +310,7 @@
 <pre class="highlight plaintext"><code>{
     "url": "https://example.com/sales.csv",
     "title": "Sales Data",
-    "vector_set": [
+    "columns": [
         {
             "column_header": "Date",
             "data_type": "datetime"
@@ -542,7 +542,7 @@
 <td>Human-readable name of the source.</td>
 </tr>
 <tr>
-<td>vector_set</td>
+<td>columns</td>
 <td>JSON object</td>
 <td><a href="#data-types">A list of column headers and their data types</a>.</td>
 </tr>
@@ -580,38 +580,47 @@
  "next": "http://popily.com/api/sources/?page=2",
  "previous": None,
  "results": [{"columns": [{"column_header": "SEX",
-     "data_type": "category",
-     "id": 29413,
-     "score": 0.0},
-    {"column_header": "HAIR",
-     "data_type": "category",
-     "id": 29412,
-     "score": 0.0},
-    {"column_header": "EYE",
-     "data_type": "category",
-     "id": 29411,
-     "score": 0.0},
-    {"column_header": "ALIGN",
-     "data_type": "category",
-     "id": 29410,
-     "score": 0.0},
-    {"column_header": "name",
-     "data_type": "rowlabel",
-     "id": 29409,
-     "score": 0.0}],
-   "created_by": 3,
-   "description": None,
-   "explore_path": "/explore/source/dc-wikia-data-3/discoveries/",
-   "id": 2287,
-   "sheetname": None,
-   "slug": "dc-wikia-data-3",
-   "status": "inspecting",
-   "title": "DC Comics Data",
-   "url": None}]
+             "data_type": "category",
+             "id": 29413,
+             "score": 0.0},
+            {"column_header": "HAIR",
+             "data_type": "category",
+             "id": 29412,
+             "score": 0.0},
+            {"column_header": "EYE",
+             "data_type": "category",
+             "id": 29411,
+             "score": 0.0},
+            {"column_header": "ALIGN",
+             "data_type": "category",
+             "id": 29410,
+             "score": 0.0},
+            {"column_header": "name",
+             "data_type": "rowlabel",
+             "id": 29409,
+             "score": 0.0}],
+             "created_by": 3,
+             "description": None,
+             "explore_path": "/explore/source/dc-wikia-data-3/discoveries/",
+             "id": 2287,
+             "sheetname": None,
+             "slug": "dc-wikia-data-3",
+             "status": "inspecting",
+             "title": "DC Comics Data",
+             "url": None}]
 }
 </code></pre>
 
 <p>Lists all source resources created by a user.</p>
+
+<h3 id="api-response-objects">API response objects</h3>
+
+<ul>
+<li><strong>count:</strong> Number of source resources</li>
+<li><strong>next:</strong> Pagination marker</li>
+<li><strong>previous:</strong> Pagination marker</li>
+<li><strong>results:</strong> (see <a href="#get_source">get_source</a> for full explanation)</li>
+</ul>
 
 <h2 id="get_source">get_source</h2>
 <pre class="highlight python"><code><span class="c"># Get source with id 34242</span>
@@ -669,6 +678,43 @@
 <td>id for the source.</td>
 </tr>
 </tbody></table>
+
+<h3 id="api-response-objects">API response objects</h3>
+
+<ul>
+<li><strong>id:</strong> Source UID</li>
+<li><strong>url:</strong> Full URL where the data file or API endpoint can be accessed)</li>
+<li><strong>slug:</strong> Unique slug of the source resource</li>
+<li><strong>title:</strong> Human-readable name</li>
+<li><strong>description:</strong> Human-readable description</li>
+<li><strong>columns:</strong> List of columns
+
+<ul>
+<li><strong>column_header:</strong> Title of column</li>
+<li><strong>data_type:</strong> Type of data in column (<a href="#source-data-types">see source data types</a>)</li>
+<li><strong>id:</strong> Column UID</li>
+<li><strong>score:</strong> &ldquo;Interestingness&rdquo; score (used in some rankings)</li>
+</ul></li>
+<li><strong>created_by:</strong> UID of creating user</li>
+<li><strong>status:</strong> Status of source resource
+
+<ul>
+<li><strong>inspecting:</strong> Initial inspection</li>
+<li><strong>calculating:</strong> Processing underway</li>
+<li><strong>reinspecting:</strong> Secondary inspection</li>
+</ul></li>
+<li><strong>type:</strong> Type of data used to create source resource
+
+<ul>
+<li><strong>e_csv:</strong> CSV file accessed via URL</li>
+<li><strong>e_xls:</strong> Excel file accessed via URL</li>
+<li><strong>e_json:</strong> JSON accessed via URL</li>
+<li><strong>sql:</strong> Results from SQL query</li>
+</ul></li>
+<li><strong>sheetname:</strong> Used when working from Excel files with more than one sheet</li>
+<li><strong>connection_string:</strong> Full connection string to your MySQL or Postgres database</li>
+<li><strong>query:</strong> SQL query you&rsquo;d like to run on your database</li>
+</ul>
 
 <h2 id="get_insights">get_insights</h2>
 <pre class="highlight python"><code><span class="c"># Get insights about Column A and Column B from sourcev 34242</span>
