@@ -3,6 +3,7 @@ title: Popily API Reference
 
 language_tabs:
   - python
+  - node.js
   - http
 
 toc_footers:
@@ -115,6 +116,48 @@ source = popily_api.add_source(
                         query=query, columns=columns,
                         title=title)
 ```
+```node.js
+var popily = require('popily')('YOUR API TOKEN');
+
+var sourceData = {};
+
+// Give it a title (optional)
+sourceData['title'] = 'DC Comics Data';
+
+// Define the column types
+sourceData['columns'] = [
+    {
+        'column_header': 'name',
+        'data_type': 'rowlabel'
+    },
+    {
+        'column_header': 'ALIGN',
+        'data_type': 'category'
+    },
+    {
+        'column_header': 'EYE',
+        'data_type': 'category'
+    },
+    {
+        'column_header': 'HAIR',
+        'data_type': 'category'
+    },
+    {
+        'column_header': 'SEX',
+        'data_type': 'category'
+    }
+];
+
+# Example connection to a database column called 'characters'
+sourceData['connection_string'] = 'mysql://username:password@host:port/database';
+sourceData['query'] = 'SELECT * FROM characters';
+
+popily.addSource(sourceData, function(err, source) {
+    // process the source
+});
+
+```
+
 A (data) source resource is data a user has added to Popily and can be populated from a file, a database connection, or a JSON API. When you add a source to Popily, we'll automatically create a resource, inspect the resource, perform some calculations, and make a sample space of insight resources that you can browse in the application UI (or retrieve via the insights endpoint).
 
 Parameter | Format | Description
@@ -202,8 +245,20 @@ We’re exploring this data through the API, but once a data source has been add
 ```python
 import popily_api
 
-# Get source with id 34242
+# Get source list
 popily_api.get_sources()
+```
+```node.js
+var popily = require('popily')('YOUR API TOKEN');
+
+// Get source list
+popily.getSources(function(err, sources) {
+  if(err)
+    throw new Error(err);
+  sources.results.forEach(function(err, source) {
+    // source
+  });
+});
 ```
 
 > Example API response
@@ -269,6 +324,15 @@ import popily_api
 # Get insights about Column A and Column B from sourcev 34242
 popily.get_insights(324442, columns=['Column A','Column B'])
 ```
+```node.js
+var popily = require('popily')('YOUR API TOKEN');
+popily.getInsights(324442, {
+  'columns': ['Column A','Column B']
+  }, function(err, insights) {
+    // insights
+  });
+
+```
 
 > Example API response
 
@@ -297,7 +361,7 @@ Parameter | Format | Description
 --------- | ------- | -----------
 source | integer | id for the source.
 columns | list | List of column names in a source.
-insight_type | string | The type of analysis used in the insights.
+insight_types | list | The type of analysis used in the insights.
 
 ## Get insight
 
@@ -306,6 +370,20 @@ import popily_api
 
 # Get insight 249985
 popily.get_insight(249985,height=500,width=500)
+```
+```node.js
+var popily = require('popily')('YOUR API TOKEN');
+
+var filters = [];
+
+// Get insight 249985
+popily.getInsight(249985, {filters: filters}, {
+  height: 500,
+  width: 500
+  }, function(err, insight) {
+    var iframe = document.createElement('iframe');
+    iframe.src = insight.embed_url;
+  });
 ```
 
 > Example API response
@@ -351,6 +429,21 @@ popily.customize_insight(249985,
                          y_label='Genders',
                          category_order='z-a')
 ```
+```node.js
+var popily = require('popily')('YOUR API TOKEN');
+
+// Customize insight 249985
+var filters = [];
+
+popily.customize_insight(249985, {filters: filters}, {
+         title: 'This Chart is Awesome',
+         x_label: 'Goodness',
+         y_label: 'Genders',
+         category_order: 'z-a'
+ }, function(err, insight) {
+ });
+ 
+```
 
 Customize the display of a single insight. Note, currently customizations are bound to an insight and thus an insight can only have a single customization.
 
@@ -375,6 +468,22 @@ filters = [
 
 insight = popily.get_insight(249985, filters=filters)
 ```
+```node.js
+var popily = require('popily')('YOUR API TOKEN');
+
+var filters = [
+    {
+        'column': 'SEX',
+        'values': ['Genderless Characters','Transgender Characters']
+    }
+];
+
+popily.getInsight(249985, {filters: filters}, function(err, insight) {
+  // here process insight
+});
+
+```
+
 
 Sometimes you want to tell a more specific story. With Popily you can apply filters to any insight or list or insights, and then assign customizations that are specific to the filters you’ve applied. Filters allow you to control the data within a relationship insight.
 
@@ -401,7 +510,6 @@ r = requests.post('https://popily.com/api/users/',
                     json={'username':'testing'},
                     headers={'Authorization': 'Token ' + <YOUR API TOKEN>})
 ```
-
 Create a user resource.
 
 Parameter | Format | Description
@@ -439,6 +547,9 @@ We love Python so we couldn't help but make an official Popily client for Python
 ```python
 pip install popily-api
 ```
+```node.js
+npm install popily
+```
 
 Installing the Popily API client is easy with the package manager [pip](https://pypi.python.org/pypi/pip).
 
@@ -447,8 +558,11 @@ Installing the Popily API client is easy with the package manager [pip](https://
 ```python
 pip install popily-api --upgrade
 ```
+```node.js
+npm install popily
+```
 
-Upgrading the client can be accomplished with the `-upgrade` argument.
+Upgrading the python client can be accomplished with the `-upgrade` argument.
 
 ## add_source
 
@@ -493,6 +607,60 @@ source = popily.add_source(
                         query=query, columns=columns,
                         title=title)
 ```
+```node.js
+
+// Three examples of add_source
+
+var popily = require('popily')('YOUR API TOKEN');
+
+# Give it a title (optional)
+var title = 'DC Comics Data';
+
+# Define the column types
+var columns = [
+    {
+        'column_header': 'name',
+        'data_type': 'rowlabel'
+    },
+    {
+        'column_header': 'HAIR',
+        'data_type': 'category'
+    },
+]
+
+# If the data is in a CSV file locally
+var filePath = {'data': '/path/to/the/file.csv'}
+popily.addSource({
+  title: title
+  columns: columns, 
+  data: filePath
+  }, function(err, source) {
+    // ..
+  });
+
+# If the dataset is remote
+var url = 'https://example.com/dataset.csv'
+popily.addSource({
+    title: title
+    columns: columns, 
+    url: url
+  }, function(err, source) {
+    // ..
+  });
+
+# If the data is from an SQL query
+var connectionString = 'mysql://username:password@host:port/database'
+var query = 'SELECT * FROM TableA'
+popily.addSource({
+  title: title
+  columns: columns, 
+  connection_string: connectionString,
+  query: query
+  }, function(err, source) {
+    // ..
+  });
+
+```
 
 Creates a new data source resource in Popily.
 
@@ -509,8 +677,14 @@ query | string | The SQL query you'd like to run on your database.
 ## get_sources
 
 ```python
-# Get source with id 34242
-popily_api.get_sources()
+# Get sources
+sources = popily_api.get_sources()
+```
+```node.js
+// Get sources
+popily.getSources(function(err, sources) {
+  // ..
+});
 ```
 
 > Example API response
@@ -564,6 +738,12 @@ Lists all source resources created by a user.
 ```python
 # Get source with id 34242
 popily_api.get_source(34242)
+```
+```node.js
+// Get source with id 34242
+popily.getSource(34242, function(err, source) {
+  // ..
+})
 ```
 
 > Example API response
@@ -639,6 +819,14 @@ source | integer | id for the source.
 # Get insights about Column A and Column B from sourcev 34242
 popily.get_insights(324442, columns=['Column A','Column B'])
 ```
+```node.js
+// Get insights about Column A and Column B from sourcev 34242
+popily.getInsights(324442, {
+    columns: ['Column A','Column B']
+  }, function(err, insights) {
+    // ..
+  });
+```
 
 > Example API response
 
@@ -667,13 +855,22 @@ Parameter | Format | Description
 --------- | ------- | -----------
 source | integer | id for the source.
 columns | list | List of column names in a source.
-insight_type | string | The type of analysis used in the insights.
+insight_types | list | The type of analysis used in the insights.
 
 ## get_insight
 
 ```python
 # Get insight 249985
 popily.get_insight(249985,height=500,width=500)
+```
+```node.js
+// Get insight 249985
+popily.getInsight(249985, {}, {
+  height: 500, 
+  width=500
+  }, function(err, insight) {
+    // ,,
+  });
 ```
 
 > Example API response
@@ -715,6 +912,17 @@ popily.customize_insight(249985,
                          x_label='Goodness',
                          y_label='Genders',
                          category_order='z-a')
+```
+```node.js
+// Customize insight 249985
+popily.customizeInsight(249985, {}, {
+    title: 'This Chart is Awesome',
+    x_label: 'Goodness',
+    y_label: 'Genders',
+    category_order: 'z-a'
+  }, function(err, insight) {
+    // ..
+  });
 ```
 
 Customize the display of a single insight. Note, currently customizations are bound to an insight and thus an insight can only have a single customization.
