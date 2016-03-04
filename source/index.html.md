@@ -3,7 +3,7 @@ title: Popily API Reference
 
 language_tabs:
   - python
-  - node.js
+  - javascript
   - http
 
 toc_footers:
@@ -116,7 +116,7 @@ source = popily_api.add_source(
                         query=query, columns=columns,
                         title=title)
 ```
-```node.js
+```javascript
 var popily = require('popily')('YOUR API TOKEN');
 
 var sourceData = {};
@@ -248,7 +248,7 @@ import popily_api
 # Get source list
 popily_api.get_sources()
 ```
-```node.js
+```javascript
 var popily = require('popily')('YOUR API TOKEN');
 
 // Get source list
@@ -324,7 +324,7 @@ import popily_api
 # Get insights about Column A and Column B from sourcev 34242
 popily.get_insights(324442, columns=['Column A','Column B'])
 ```
-```node.js
+```javascript
 var popily = require('popily')('YOUR API TOKEN');
 popily.getInsights(324442, {
   'columns': ['Column A','Column B']
@@ -371,7 +371,7 @@ import popily_api
 # Get insight 249985
 popily.get_insight(249985,height=500,width=500)
 ```
-```node.js
+```javascript
 var popily = require('popily')('YOUR API TOKEN');
 
 var filters = [];
@@ -429,7 +429,7 @@ popily.customize_insight(249985,
                          y_label='Genders',
                          category_order='z-a')
 ```
-```node.js
+```javascript
 var popily = require('popily')('YOUR API TOKEN');
 
 // Customize insight 249985
@@ -468,7 +468,7 @@ filters = [
 
 insight = popily.get_insight(249985, filters=filters)
 ```
-```node.js
+```javascript
 var popily = require('popily')('YOUR API TOKEN');
 
 var filters = [
@@ -547,7 +547,7 @@ We love Python so we couldn't help but make an official Popily client for Python
 ```python
 pip install popily-api
 ```
-```node.js
+```javascript
 npm install popily
 ```
 
@@ -558,7 +558,7 @@ Installing the Popily API client is easy with the package manager [pip](https://
 ```python
 pip install popily-api --upgrade
 ```
-```node.js
+```javascript
 npm install popily
 ```
 
@@ -607,7 +607,7 @@ source = popily.add_source(
                         query=query, columns=columns,
                         title=title)
 ```
-```node.js
+```javascript
 
 // Three examples of add_source
 
@@ -680,7 +680,7 @@ query | string | The SQL query you'd like to run on your database.
 # Get sources
 sources = popily_api.get_sources()
 ```
-```node.js
+```javascript
 // Get sources
 popily.getSources(function(err, sources) {
   // ..
@@ -739,7 +739,7 @@ Lists all source resources created by a user.
 # Get source with id 34242
 popily_api.get_source(34242)
 ```
-```node.js
+```javascript
 // Get source with id 34242
 popily.getSource(34242, function(err, source) {
   // ..
@@ -819,7 +819,7 @@ source | integer | id for the source.
 # Get insights about Column A and Column B from sourcev 34242
 popily.get_insights(324442, columns=['Column A','Column B'])
 ```
-```node.js
+```javascript
 // Get insights about Column A and Column B from sourcev 34242
 popily.getInsights(324442, {
     columns: ['Column A','Column B']
@@ -863,7 +863,7 @@ insight_types | list | The type of analysis used in the insights.
 # Get insight 249985
 popily.get_insight(249985,height=500,width=500)
 ```
-```node.js
+```javascript
 // Get insight 249985
 popily.getInsight(249985, {}, {
   height: 500, 
@@ -913,7 +913,7 @@ popily.customize_insight(249985,
                          y_label='Genders',
                          category_order='z-a')
 ```
-```node.js
+```javascript
 // Customize insight 249985
 popily.customizeInsight(249985, {}, {
     title: 'This Chart is Awesome',
