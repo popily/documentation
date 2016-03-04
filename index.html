@@ -91,7 +91,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;python&quot;,&quot;node.js&quot;,&quot;http&quot;]">
+  <body class="index" data-languages="[&quot;python&quot;,&quot;javascript&quot;,&quot;http&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -102,7 +102,7 @@
       <img src="images/logo.png" />
         <div class="lang-selector">
               <a href="#" data-language-name="python">python</a>
-              <a href="#" data-language-name="node.js">node.js</a>
+              <a href="#" data-language-name="javascript">javascript</a>
               <a href="#" data-language-name="http">http</a>
         </div>
         <div class="search">
@@ -256,44 +256,44 @@
                         <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
                         <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
 </code></pre>
-<pre class="highlight plaintext"><code>var popily = require('popily')('YOUR API TOKEN');
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
 
-var sourceData = {};
+<span class="kd">var</span> <span class="nx">sourceData</span> <span class="o">=</span> <span class="p">{};</span>
 
-// Give it a title (optional)
-sourceData['title'] = 'DC Comics Data';
+<span class="c1">// Give it a title (optional)</span>
+<span class="nx">sourceData</span><span class="p">[</span><span class="s1">'title'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'DC Comics Data'</span><span class="p">;</span>
 
-// Define the column types
-sourceData['columns'] = [
-    {
-        'column_header': 'name',
-        'data_type': 'rowlabel'
-    },
-    {
-        'column_header': 'ALIGN',
-        'data_type': 'category'
-    },
-    {
-        'column_header': 'EYE',
-        'data_type': 'category'
-    },
-    {
-        'column_header': 'HAIR',
-        'data_type': 'category'
-    },
-    {
-        'column_header': 'SEX',
-        'data_type': 'category'
-    }
-];
+<span class="c1">// Define the column types</span>
+<span class="nx">sourceData</span><span class="p">[</span><span class="s1">'columns'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s1">'column_header'</span><span class="p">:</span> <span class="s1">'name'</span><span class="p">,</span>
+        <span class="s1">'data_type'</span><span class="p">:</span> <span class="s1">'rowlabel'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s1">'column_header'</span><span class="p">:</span> <span class="s1">'ALIGN'</span><span class="p">,</span>
+        <span class="s1">'data_type'</span><span class="p">:</span> <span class="s1">'category'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s1">'column_header'</span><span class="p">:</span> <span class="s1">'EYE'</span><span class="p">,</span>
+        <span class="s1">'data_type'</span><span class="p">:</span> <span class="s1">'category'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s1">'column_header'</span><span class="p">:</span> <span class="s1">'HAIR'</span><span class="p">,</span>
+        <span class="s1">'data_type'</span><span class="p">:</span> <span class="s1">'category'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s1">'column_header'</span><span class="p">:</span> <span class="s1">'SEX'</span><span class="p">,</span>
+        <span class="s1">'data_type'</span><span class="p">:</span> <span class="s1">'category'</span>
+    <span class="p">}</span>
+<span class="p">];</span>
 
-# Example connection to a database column called 'characters'
-sourceData['connection_string'] = 'mysql://username:password@host:port/database';
-sourceData['query'] = 'SELECT * FROM characters';
+<span class="err">#</span> <span class="nx">Example</span> <span class="nx">connection</span> <span class="nx">to</span> <span class="nx">a</span> <span class="nx">database</span> <span class="nx">column</span> <span class="nx">called</span> <span class="s1">'characters'</span>
+<span class="nx">sourceData</span><span class="p">[</span><span class="s1">'connection_string'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'mysql://username:password@host:port/database'</span><span class="p">;</span>
+<span class="nx">sourceData</span><span class="p">[</span><span class="s1">'query'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'SELECT * FROM characters'</span><span class="p">;</span>
 
-popily.addSource(sourceData, function(err, source) {
-    // process the source
-});
+<span class="nx">popily</span><span class="p">.</span><span class="nx">addSource</span><span class="p">(</span><span class="nx">sourceData</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// process the source</span>
+<span class="p">});</span>
 
 </code></pre>
 
@@ -481,16 +481,16 @@ popily.addSource(sourceData, function(err, source) {
 <span class="c"># Get source list</span>
 <span class="n">popily_api</span><span class="o">.</span><span class="n">get_sources</span><span class="p">()</span>
 </code></pre>
-<pre class="highlight plaintext"><code>var popily = require('popily')('YOUR API TOKEN');
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
 
-// Get source list
-popily.getSources(function(err, sources) {
-  if(err)
-    throw new Error(err);
-  sources.results.forEach(function(err, source) {
-    // source
-  });
-});
+<span class="c1">// Get source list</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getSources</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">sources</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+  <span class="nx">sources</span><span class="p">.</span><span class="nx">results</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// source</span>
+  <span class="p">});</span>
+<span class="p">});</span>
 </code></pre>
 
 <blockquote>
@@ -559,12 +559,12 @@ popily.getSources(function(err, sources) {
 <span class="c"># Get insights about Column A and Column B from sourcev 34242</span>
 <span class="n">popily</span><span class="o">.</span><span class="n">get_insights</span><span class="p">(</span><span class="mi">324442</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'Column A'</span><span class="p">,</span><span class="s">'Column B'</span><span class="p">])</span>
 </code></pre>
-<pre class="highlight plaintext"><code>var popily = require('popily')('YOUR API TOKEN');
-popily.getInsights(324442, {
-  'columns': ['Column A','Column B']
-  }, function(err, insights) {
-    // insights
-  });
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsights</span><span class="p">(</span><span class="mi">324442</span><span class="p">,</span> <span class="p">{</span>
+  <span class="s1">'columns'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Column A'</span><span class="p">,</span><span class="s1">'Column B'</span><span class="p">]</span>
+  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insights</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// insights</span>
+  <span class="p">});</span>
 
 </code></pre>
 
@@ -621,18 +621,18 @@ popily.getInsights(324442, {
 <span class="c"># Get insight 249985</span>
 <span class="n">popily</span><span class="o">.</span><span class="n">get_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 </code></pre>
-<pre class="highlight plaintext"><code>var popily = require('popily')('YOUR API TOKEN');
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
 
-var filters = [];
+<span class="kd">var</span> <span class="nx">filters</span> <span class="o">=</span> <span class="p">[];</span>
 
-// Get insight 249985
-popily.getInsight(249985, {filters: filters}, {
-  height: 500,
-  width: 500
-  }, function(err, insight) {
-    var iframe = document.createElement('iframe');
-    iframe.src = insight.embed_url;
-  });
+<span class="c1">// Get insight 249985</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span> <span class="p">{</span><span class="na">filters</span><span class="p">:</span> <span class="nx">filters</span><span class="p">},</span> <span class="p">{</span>
+  <span class="na">height</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+  <span class="na">width</span><span class="p">:</span> <span class="mi">500</span>
+  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insight</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">iframe</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">'iframe'</span><span class="p">);</span>
+    <span class="nx">iframe</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">insight</span><span class="p">.</span><span class="nx">embed_url</span><span class="p">;</span>
+  <span class="p">});</span>
 </code></pre>
 
 <blockquote>
@@ -702,18 +702,18 @@ popily.getInsight(249985, {filters: filters}, {
                          <span class="n">y_label</span><span class="o">=</span><span class="s">'Genders'</span><span class="p">,</span>
                          <span class="n">category_order</span><span class="o">=</span><span class="s">'z-a'</span><span class="p">)</span>
 </code></pre>
-<pre class="highlight plaintext"><code>var popily = require('popily')('YOUR API TOKEN');
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
 
-// Customize insight 249985
-var filters = [];
+<span class="c1">// Customize insight 249985</span>
+<span class="kd">var</span> <span class="nx">filters</span> <span class="o">=</span> <span class="p">[];</span>
 
-popily.customize_insight(249985, {filters: filters}, {
-         title: 'This Chart is Awesome',
-         x_label: 'Goodness',
-         y_label: 'Genders',
-         category_order: 'z-a'
- }, function(err, insight) {
- });
+<span class="nx">popily</span><span class="p">.</span><span class="nx">customize_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span> <span class="p">{</span><span class="na">filters</span><span class="p">:</span> <span class="nx">filters</span><span class="p">},</span> <span class="p">{</span>
+         <span class="na">title</span><span class="p">:</span> <span class="s1">'This Chart is Awesome'</span><span class="p">,</span>
+         <span class="na">x_label</span><span class="p">:</span> <span class="s1">'Goodness'</span><span class="p">,</span>
+         <span class="na">y_label</span><span class="p">:</span> <span class="s1">'Genders'</span><span class="p">,</span>
+         <span class="na">category_order</span><span class="p">:</span> <span class="s1">'z-a'</span>
+ <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insight</span><span class="p">)</span> <span class="p">{</span>
+ <span class="p">});</span>
 
 </code></pre>
 
@@ -760,18 +760,18 @@ popily.customize_insight(249985, {filters: filters}, {
 
 <span class="n">insight</span> <span class="o">=</span> <span class="n">popily</span><span class="o">.</span><span class="n">get_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="n">filters</span><span class="p">)</span>
 </code></pre>
-<pre class="highlight plaintext"><code>var popily = require('popily')('YOUR API TOKEN');
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
 
-var filters = [
-    {
-        'column': 'SEX',
-        'values': ['Genderless Characters','Transgender Characters']
-    }
-];
+<span class="kd">var</span> <span class="nx">filters</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s1">'column'</span><span class="p">:</span> <span class="s1">'SEX'</span><span class="p">,</span>
+        <span class="s1">'values'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Genderless Characters'</span><span class="p">,</span><span class="s1">'Transgender Characters'</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">];</span>
 
-popily.getInsight(249985, {filters: filters}, function(err, insight) {
-  // here process insight
-});
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span> <span class="p">{</span><span class="na">filters</span><span class="p">:</span> <span class="nx">filters</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insight</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// here process insight</span>
+<span class="p">});</span>
 
 </code></pre>
 
@@ -845,7 +845,7 @@ popily.getInsight(249985, {filters: filters}, function(err, insight) {
 <h2 id="install-client">Install client</h2>
 <pre class="highlight python"><code><span class="n">pip</span> <span class="n">install</span> <span class="n">popily</span><span class="o">-</span><span class="n">api</span>
 </code></pre>
-<pre class="highlight plaintext"><code>npm install popily
+<pre class="highlight javascript"><code><span class="nx">npm</span> <span class="nx">install</span> <span class="nx">popily</span>
 </code></pre>
 
 <p>Installing the Popily API client is easy with the package manager <a href="https://pypi.python.org/pypi/pip">pip</a>.</p>
@@ -853,7 +853,7 @@ popily.getInsight(249985, {filters: filters}, function(err, insight) {
 <h2 id="upgrade-client">Upgrade client</h2>
 <pre class="highlight python"><code><span class="n">pip</span> <span class="n">install</span> <span class="n">popily</span><span class="o">-</span><span class="n">api</span> <span class="o">--</span><span class="n">upgrade</span>
 </code></pre>
-<pre class="highlight plaintext"><code>npm install popily
+<pre class="highlight javascript"><code><span class="nx">npm</span> <span class="nx">install</span> <span class="nx">popily</span>
 </code></pre>
 
 <p>Upgrading the python client can be accomplished with the <code class="prettyprint">-upgrade</code> argument.</p>
@@ -899,57 +899,57 @@ popily.getInsight(249985, {filters: filters}, function(err, insight) {
                         <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
                         <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
 </code></pre>
-<pre class="highlight plaintext"><code>
-// Three examples of add_source
+<pre class="highlight javascript"><code>
+<span class="c1">// Three examples of add_source</span>
 
-var popily = require('popily')('YOUR API TOKEN');
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
 
-# Give it a title (optional)
-var title = 'DC Comics Data';
+<span class="err">#</span> <span class="nx">Give</span> <span class="nx">it</span> <span class="nx">a</span> <span class="nx">title</span> <span class="p">(</span><span class="nx">optional</span><span class="p">)</span>
+<span class="kd">var</span> <span class="nx">title</span> <span class="o">=</span> <span class="s1">'DC Comics Data'</span><span class="p">;</span>
 
-# Define the column types
-var columns = [
-    {
-        'column_header': 'name',
-        'data_type': 'rowlabel'
-    },
-    {
-        'column_header': 'HAIR',
-        'data_type': 'category'
-    },
-]
+<span class="err">#</span> <span class="nx">Define</span> <span class="nx">the</span> <span class="nx">column</span> <span class="nx">types</span>
+<span class="kd">var</span> <span class="nx">columns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s1">'column_header'</span><span class="p">:</span> <span class="s1">'name'</span><span class="p">,</span>
+        <span class="s1">'data_type'</span><span class="p">:</span> <span class="s1">'rowlabel'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s1">'column_header'</span><span class="p">:</span> <span class="s1">'HAIR'</span><span class="p">,</span>
+        <span class="s1">'data_type'</span><span class="p">:</span> <span class="s1">'category'</span>
+    <span class="p">},</span>
+<span class="p">]</span>
 
-# If the data is in a CSV file locally
-var filePath = {'data': '/path/to/the/file.csv'}
-popily.addSource({
-  title: title
-  columns: columns, 
-  data: filePath
-  }, function(err, source) {
-    // ..
-  });
+<span class="err">#</span> <span class="nx">If</span> <span class="nx">the</span> <span class="nx">data</span> <span class="nx">is</span> <span class="k">in</span> <span class="nx">a</span> <span class="nx">CSV</span> <span class="nx">file</span> <span class="nx">locally</span>
+<span class="kd">var</span> <span class="nx">filePath</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'data'</span><span class="p">:</span> <span class="s1">'/path/to/the/file.csv'</span><span class="p">}</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">addSource</span><span class="p">({</span>
+  <span class="na">title</span><span class="p">:</span> <span class="nx">title</span>
+  <span class="na">columns</span><span class="p">:</span> <span class="nx">columns</span><span class="p">,</span> 
+  <span class="na">data</span><span class="p">:</span> <span class="nx">filePath</span>
+  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ..</span>
+  <span class="p">});</span>
 
-# If the dataset is remote
-var url = 'https://example.com/dataset.csv'
-popily.addSource({
-    title: title
-    columns: columns, 
-    url: url
-  }, function(err, source) {
-    // ..
-  });
+<span class="err">#</span> <span class="nx">If</span> <span class="nx">the</span> <span class="nx">dataset</span> <span class="nx">is</span> <span class="nx">remote</span>
+<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s1">'https://example.com/dataset.csv'</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">addSource</span><span class="p">({</span>
+    <span class="na">title</span><span class="p">:</span> <span class="nx">title</span>
+    <span class="na">columns</span><span class="p">:</span> <span class="nx">columns</span><span class="p">,</span> 
+    <span class="na">url</span><span class="p">:</span> <span class="nx">url</span>
+  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ..</span>
+  <span class="p">});</span>
 
-# If the data is from an SQL query
-var connectionString = 'mysql://username:password@host:port/database'
-var query = 'SELECT * FROM TableA'
-popily.addSource({
-  title: title
-  columns: columns, 
-  connection_string: connectionString,
-  query: query
-  }, function(err, source) {
-    // ..
-  });
+<span class="err">#</span> <span class="nx">If</span> <span class="nx">the</span> <span class="nx">data</span> <span class="nx">is</span> <span class="nx">from</span> <span class="nx">an</span> <span class="nx">SQL</span> <span class="nx">query</span>
+<span class="kd">var</span> <span class="nx">connectionString</span> <span class="o">=</span> <span class="s1">'mysql://username:password@host:port/database'</span>
+<span class="kd">var</span> <span class="nx">query</span> <span class="o">=</span> <span class="s1">'SELECT * FROM TableA'</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">addSource</span><span class="p">({</span>
+  <span class="na">title</span><span class="p">:</span> <span class="nx">title</span>
+  <span class="na">columns</span><span class="p">:</span> <span class="nx">columns</span><span class="p">,</span> 
+  <span class="na">connection_string</span><span class="p">:</span> <span class="nx">connectionString</span><span class="p">,</span>
+  <span class="na">query</span><span class="p">:</span> <span class="nx">query</span>
+  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ..</span>
+  <span class="p">});</span>
 
 </code></pre>
 
@@ -1003,10 +1003,10 @@ popily.addSource({
 <pre class="highlight python"><code><span class="c"># Get sources</span>
 <span class="n">sources</span> <span class="o">=</span> <span class="n">popily_api</span><span class="o">.</span><span class="n">get_sources</span><span class="p">()</span>
 </code></pre>
-<pre class="highlight plaintext"><code>// Get sources
-popily.getSources(function(err, sources) {
-  // ..
-});
+<pre class="highlight javascript"><code><span class="c1">// Get sources</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getSources</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">sources</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ..</span>
+<span class="p">});</span>
 </code></pre>
 
 <blockquote>
@@ -1062,10 +1062,10 @@ popily.getSources(function(err, sources) {
 <pre class="highlight python"><code><span class="c"># Get source with id 34242</span>
 <span class="n">popily_api</span><span class="o">.</span><span class="n">get_source</span><span class="p">(</span><span class="mi">34242</span><span class="p">)</span>
 </code></pre>
-<pre class="highlight plaintext"><code>// Get source with id 34242
-popily.getSource(34242, function(err, source) {
-  // ..
-})
+<pre class="highlight javascript"><code><span class="c1">// Get source with id 34242</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getSource</span><span class="p">(</span><span class="mi">34242</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ..</span>
+<span class="p">})</span>
 </code></pre>
 
 <blockquote>
@@ -1161,12 +1161,12 @@ popily.getSource(34242, function(err, source) {
 <pre class="highlight python"><code><span class="c"># Get insights about Column A and Column B from sourcev 34242</span>
 <span class="n">popily</span><span class="o">.</span><span class="n">get_insights</span><span class="p">(</span><span class="mi">324442</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'Column A'</span><span class="p">,</span><span class="s">'Column B'</span><span class="p">])</span>
 </code></pre>
-<pre class="highlight plaintext"><code>// Get insights about Column A and Column B from sourcev 34242
-popily.getInsights(324442, {
-    columns: ['Column A','Column B']
-  }, function(err, insights) {
-    // ..
-  });
+<pre class="highlight javascript"><code><span class="c1">// Get insights about Column A and Column B from sourcev 34242</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsights</span><span class="p">(</span><span class="mi">324442</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">columns</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Column A'</span><span class="p">,</span><span class="s1">'Column B'</span><span class="p">]</span>
+  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insights</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ..</span>
+  <span class="p">});</span>
 </code></pre>
 
 <blockquote>
@@ -1220,13 +1220,13 @@ popily.getInsights(324442, {
 <pre class="highlight python"><code><span class="c"># Get insight 249985</span>
 <span class="n">popily</span><span class="o">.</span><span class="n">get_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 </code></pre>
-<pre class="highlight plaintext"><code>// Get insight 249985
-popily.getInsight(249985, {}, {
-  height: 500, 
-  width=500
-  }, function(err, insight) {
-    // ,,
-  });
+<pre class="highlight javascript"><code><span class="c1">// Get insight 249985</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span>
+  <span class="na">height</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span> 
+  <span class="nx">width</span><span class="o">=</span><span class="mi">500</span>
+  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insight</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ,,</span>
+  <span class="p">});</span>
 </code></pre>
 
 <blockquote>
@@ -1294,15 +1294,15 @@ popily.getInsight(249985, {}, {
                          <span class="n">y_label</span><span class="o">=</span><span class="s">'Genders'</span><span class="p">,</span>
                          <span class="n">category_order</span><span class="o">=</span><span class="s">'z-a'</span><span class="p">)</span>
 </code></pre>
-<pre class="highlight plaintext"><code>// Customize insight 249985
-popily.customizeInsight(249985, {}, {
-    title: 'This Chart is Awesome',
-    x_label: 'Goodness',
-    y_label: 'Genders',
-    category_order: 'z-a'
-  }, function(err, insight) {
-    // ..
-  });
+<pre class="highlight javascript"><code><span class="c1">// Customize insight 249985</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">customizeInsight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="s1">'This Chart is Awesome'</span><span class="p">,</span>
+    <span class="na">x_label</span><span class="p">:</span> <span class="s1">'Goodness'</span><span class="p">,</span>
+    <span class="na">y_label</span><span class="p">:</span> <span class="s1">'Genders'</span><span class="p">,</span>
+    <span class="na">category_order</span><span class="p">:</span> <span class="s1">'z-a'</span>
+  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insight</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ..</span>
+  <span class="p">});</span>
 </code></pre>
 
 <p>Customize the display of a single insight. Note, currently customizations are bound to an insight and thus an insight can only have a single customization.</p>
@@ -1352,7 +1352,7 @@ popily.customizeInsight(249985, {}, {
       <div class="dark-box">
           <div class="lang-selector">
                 <a href="#" data-language-name="python">python</a>
-                <a href="#" data-language-name="node.js">node.js</a>
+                <a href="#" data-language-name="javascript">javascript</a>
                 <a href="#" data-language-name="http">http</a>
           </div>
       </div>
