@@ -547,7 +547,8 @@ insight_actions = [
   'average'
 ]
 
-popily.get_insights('some-source-slug', columns=columns, average=average)
+popily.get_insights('some-source-slug', columns=columns, 
+                        insight_actions=insight_actions)
 ```
 ```javascript
 // Node.js
