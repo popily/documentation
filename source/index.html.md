@@ -19,6 +19,60 @@ search: true
 
 Popily makes it it easy to embed customer-facing analytics into your application. We have client libraries in Python and JavaScript (more coming soon!) that interact with a REST API, so you can connect to your data, ask the API for the information you want, and drop cool interactive visualizations into your application -- all with just a few lines of code. 
 
+# Quick start
+
+Getting started is easy. Just send some data, pick a column to visualize, and embed the results. 
+
+```python
+from popily_api import Popily
+
+popily = Popily('YOUR API KEY')
+
+# Add a source
+columns = [
+    {
+        'column_header': 'Column 1',
+        'data_type': 'number'
+    },
+    {
+        'column_header': 'Column 2',
+        'data_type': 'category'
+    }
+]
+source = popily.add_source('http://url-of-your-csv.csv', columns=columns)
+
+# Get some insights
+insights = popily.get_insights(source['id'])
+
+# Embed the insight with an iframe
+embed_url = insights['results'][0]['embed_url']
+```
+```javascript
+var popily = new Popily('YOUR API KEY')
+
+// Add a source
+columns = [
+    {
+        'column_header': 'Column 1',
+        'data_type': 'number'
+    },
+    {
+        'column_header': 'Column 2',
+        'data_type': 'category'
+    }
+]
+popily.addSource('http://url-of-your-csv.csv', {columns:columns}, function(err, source) {
+    console.log(source); 
+});
+
+// Get some insights
+popily.get_insights(source.id, {}, function(err, insights) {
+    var iframe = document.createElement('iframe');
+    iframe.src = insights.results[0].embed_url;
+    document.body.appendChild(iframe);     
+});
+```
+
 # Concepts
 
 We have four big concepts in Popily that you'll use throughout your journey with our API.
@@ -84,7 +138,7 @@ Popily follows RESTful API patterns.
 
 Popily uses pagination when `GET` requests returns a list of objects (e.g. insights, sources). To get all objects in a list of objects, you will need to paginate through the list. Every list response has a `prev` and `next` property just for this purposes. For example:
 
-```json
+```JSON
 {
   // list of response objects
   "results": [], 
