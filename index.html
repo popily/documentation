@@ -91,7 +91,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;python&quot;,&quot;javascript&quot;,&quot;http&quot;]">
+  <body class="index" data-languages="[&quot;python&quot;,&quot;javascript&quot;,&quot;json&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -103,7 +103,7 @@
         <div class="lang-selector">
               <a href="#" data-language-name="python">python</a>
               <a href="#" data-language-name="javascript">javascript</a>
-              <a href="#" data-language-name="http">http</a>
+              <a href="#" data-language-name="json">json</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -121,23 +121,37 @@
       <div class="content">
         <h1 id="introduction">Introduction</h1>
 
-<p>Popily provides a powerful REST API for integrating embedded analytics into your application.</p>
+<p>Popily makes it it easy to embed customer-facing analytics into your application. We have client libraries in Python and JavaScript (more coming soon!) that interact with a REST API, so you can connect to your data, ask the API for the information you want, and drop cool interactive visualizations into your application &ndash; all with just a few lines of code. </p>
 
-<p>This API reference provides information on interacting with Popily&rsquo;s API endpoints.</p>
+<h1 id="concepts">Concepts</h1>
+
+<p>We have four big concepts in Popily that you&rsquo;ll use throughout your journey with our API.</p>
+
+<ol>
+<li>Data sources - Wherever your data comes from (a database, CSV file, etc).</li>
+<li>Columns - Each source has columns, which are like database columns. (If you are working with JSON, we&rsquo;ll flatten the properties into something we can treat like columns)</li>
+<li>Insights - A relationship between columns. Like average employee salary over time.</li>
+<li>Filters - A &ldquo;slide&rdquo; of the data (like a <code class="prettyprint">WHERE</code> clause in a SQL query). Like average salary for employee John Smith over time.</li>
+</ol>
+
+<p>With that out of the way, let&rsquo;s get started.</p>
 
 <h1 id="authentication">Authentication</h1>
 
-<p>Popily&rsquo;s API supports authentication through an API key. <a href="#api-key">API keys</a> can be obtained through an account with Popily.</p>
+<p>You authenticate each request an API key. Soon you&rsquo;ll get an API get as soon as you create your account. For now though, you need to email us at awesome@popily.com to as for one.</p>
 
 <h2 id="api-key">API key</h2>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">requests</span>
-<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'https://popily.com/api/sources/'</span><span class="p">,</span>
-                    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'Authorization'</span><span class="p">:</span> <span class="s">'Token '</span> <span class="o">+</span> <span class="n">YOUR</span> <span class="n">TOKEN</span><span class="p">})</span>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">popily_api</span> <span class="kn">import</span> <span class="n">Popily</span>
+<span class="n">popily</span> <span class="o">=</span> <span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR API KEY'</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight javascript"><code><span class="c1">// Node.js</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="c1">// With the browser client</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popily</span><span class="p">(</span><span class="s1">'YOUR API KEY'</span><span class="p">);</span>
 </code></pre>
 
-<p>You authenticate with Popily using a token passed in the Authorization HTTP header. If you haven&rsquo;t been assigned a token, please contact us and we&rsquo;ll hook you up.</p>
-
-<p>Authentication includes an HTTP header <code class="prettyprint">Authorization: Token 12345</code>, so Popily knows who is making the request. We strongly recommend keeping this token to yourself, so think twice about making requests directly from your front-end code (even though that is technically possible).</p>
+<p>You authenticate with Popily using a token passed in the Authorization HTTP header. If you haven&rsquo;t been assigned a token, just contact us and we&rsquo;ll hook you up. <strong>We strongly recommend keeping this token to yourself.</strong></p>
 
 <h1 id="interacting-with-the-api">Interacting with the API</h1>
 
@@ -206,15 +220,24 @@
 <li><code class="prettyprint">DELETE</code> - Remove resources</li>
 </ul>
 
-<p><code class="prettyprint">GET</code> arguments must be passed as params and <code class="prettyprint">POST</code> arguments must be passed as JSON with correct Content-Type headers.</p>
+<p><code class="prettyprint">GET</code> arguments must be passed as params and <code class="prettyprint">POST</code> arguments must be passed as JSON with correct Content-Type headers. Most of the time you won&rsquo;t need to worry about any of this, as the actual request formatting is handled by the client library in your language of choice. </p>
+
+<p><strong>If you want to use a language we haven&rsquo;t written a client for yet, let us know!</strong> We&rsquo;d love to help, either by supporting you in building an API client, or creating it ourselves.</p>
 
 <h2 id="pagination">Pagination</h2>
 
-<p>Popily uses pagination when <code class="prettyprint">GET</code> requests returns a list of objects (e.g. insights, sources). To get all objects in a paginated list of objects, you will need to paginate through the list of objects.</p>
+<p>Popily uses pagination when <code class="prettyprint">GET</code> requests returns a list of objects (e.g. insights, sources). To get all objects in a list of objects, you will need to paginate through the list. Every list response has a <code class="prettyprint">prev</code> and <code class="prettyprint">next</code> property just for this purposes. For example:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="err">//</span><span class="w"> </span><span class="err">list</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">response</span><span class="w"> </span><span class="err">objects</span><span class="w">
+  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> 
+  </span><span class="nt">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://popily.com/path/to/next/"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"previous"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://popily.com/path/to/prev/"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 
-<h1 id="sources-endpoint">Sources endpoint</h1>
+<h1 id="sources">Sources</h1>
 
-<p>The sources endpoint can be used to create new data sources or interact with existing sources. Resources in this endpoint are bound to user accounts for the sake of authentication.</p>
+<p>The <code class="prettyprint">sources</code> endpoint can be used to create new data sources or interact with existing sources. Each <code class="prettyprint">source</code> is associated with a <code class="prettyprint">user</code> by its <code class="prettyprint">created_by</code> property. By default each <code class="prettyprint">source</code> you create is associated with you, but you can also assign <code class="prettyprint">source</code> objects to <code class="prettyprint">user</code> objects you create. </p>
 
 <h2 id="create-source">Create source</h2>
 <pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily</span>
@@ -256,7 +279,11 @@
                         <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
                         <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
 </code></pre>
-<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+<pre class="highlight javascript"><code><span class="c1">// Node.js</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="c1">// Browser</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popily</span><span class="p">(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
 
 <span class="kd">var</span> <span class="nx">sourceData</span> <span class="o">=</span> <span class="p">{};</span>
 
@@ -287,17 +314,18 @@
     <span class="p">}</span>
 <span class="p">];</span>
 
-<span class="err">#</span> <span class="nx">Example</span> <span class="nx">connection</span> <span class="nx">to</span> <span class="nx">a</span> <span class="nx">database</span> <span class="nx">column</span> <span class="nx">called</span> <span class="s1">'characters'</span>
+<span class="c1">// Example connection to a database column called 'characters'</span>
 <span class="nx">sourceData</span><span class="p">[</span><span class="s1">'connection_string'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'mysql://username:password@host:port/database'</span><span class="p">;</span>
 <span class="nx">sourceData</span><span class="p">[</span><span class="s1">'query'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'SELECT * FROM characters'</span><span class="p">;</span>
 
 <span class="nx">popily</span><span class="p">.</span><span class="nx">addSource</span><span class="p">(</span><span class="nx">sourceData</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// process the source</span>
+    <span class="c1">// do something with the source</span>
 <span class="p">});</span>
-
 </code></pre>
 
-<p>A (data) source resource is data a user has added to Popily and can be populated from a file, a database connection, or a JSON API. When you add a source to Popily, we&rsquo;ll automatically create a resource, inspect the resource, perform some calculations, and make a sample space of insight resources that you can browse in the application UI (or retrieve via the insights endpoint).</p>
+<p>As soon as you add a <code class="prettyprint">source</code>, Popily will automatically start performing the calculations required to generate lots of <code class="prettyprint">insight</code> objects. <strong>Note: sources are processed asynchronously</strong>, so depending on the size of your data, this might take a few seconds to a few minutes. You can browse your <code class="prettyprint">source</code> via the API (more on that below), or through the user interface at <a href="https://popily.com">popily.com</a>. </p>
+
+<p>Once you add a source you can tell Popily to refresh the data on a schedule (like every hour or every day), so the charts you embed in your application stay up to date.</p>
 
 <table><thead>
 <tr>
@@ -322,11 +350,6 @@
 <td><a href="#data-types">A list of column headers and their data types</a>.</td>
 </tr>
 <tr>
-<td>type</td>
-<td>string</td>
-<td>The type of data store providing data to the source: <em>e_csv</em> (CSV file accessed via URL) <em>e_xls</em> (Excel file accessed via URL) <em>e_json</em> (JSON accessed via URL) <em>sql</em> (results from SQL query). When absent, type is inferred.</td>
-</tr>
-<tr>
 <td>sheetname</td>
 <td>string</td>
 <td>Used when the data source is an Excel file. Denotes the name of the sheet to use.</td>
@@ -343,34 +366,31 @@
 </tr>
 </tbody></table>
 
-<h2 id="source-data-types">Source data types</h2>
+<h2 id="sending-files">Sending files</h2>
+<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily</span>
 
-<blockquote>
-<p>Here is an example of a JSON object for creating a new source. Note that the JSON object contains column header and column data type for every row in the data source.</p>
-</blockquote>
-<pre class="highlight plaintext"><code>{
-    "url": "https://example.com/sales.csv",
-    "title": "Sales Data",
-    "columns": [
-        {
-            "column_header": "Date",
-            "data_type": "datetime"
-        },
-        {
-            "column_header": "Manager",
-            "data_type": "category"
-        },
-        {
-            "column_header": "Store ID",
-            "data_type": "rowlabel"
-        },
-        {
-            "column_header": "Sales",
-            "data_type": "currency"
-        },
-    ]
-}
+<span class="n">popily_api</span> <span class="o">=</span> <span class="n">popily</span><span class="o">.</span><span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR API TOKEN'</span><span class="p">)</span>
+
+<span class="n">your_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">'/path/to/your/file.csv'</span><span class="p">)</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">popily_api</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span><span class="n">file_obj</span><span class="o">=</span><span class="n">your_file</span><span class="p">)</span>
 </code></pre>
+<pre class="highlight javascript"><code><span class="c1">// Node.js </span>
+<span class="c1">// Note file upload isn't allowed from the browser</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="nx">filePath</span> <span class="o">=</span> <span class="s1">'/path/to/your/file.csv'</span>
+<span class="kd">var</span> <span class="nx">sourceData</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">data</span><span class="p">:</span> <span class="nx">filePath</span>
+<span class="p">};</span>
+
+<span class="nx">popily</span><span class="p">.</span><span class="nx">addSource</span><span class="p">(</span><span class="nx">sourceData</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do something with the source</span>
+<span class="p">});</span>
+</code></pre>
+
+<p>In addition to creating data <code class="prettyprint">sources</code> from file URLs and databases, you can also upload files directly to Popily. </p>
+
+<h2 id="source-data-types">Source data types</h2>
 
 <p>All source resources in Popily must contain a description of the type of data in each column. Popily understands more than just integers and strings, it can also work with higher-level concepts like categories, US states or currency. We’re always adding to this list, but these are the available types as of today.</p>
 
@@ -432,7 +452,25 @@
 
 <h2 id="source-status">Source status</h2>
 
-<p>When a source resource is added to Popily, our Mechanical Tukey technology starts processing the data. You can check the status of any source resource by looking at the source status:</p>
+<p>When a <code class="prettyprint">source</code> is added to Popily, our &ldquo;Mechanical <a href="https://en.wikipedia.org/wiki/John_Tukey">Tukey</a>&rdquo; technology starts processing the data. You can check the status of any <code class="prettyprint">source</code> by retrieving it from the API.</p>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">popily_api</span> <span class="kn">import</span> <span class="n">Popily</span>
+<span class="n">popily</span> <span class="o">=</span> <span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR TOKEN'</span><span class="p">)</span>
+<span class="c"># Get by slug</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">get_source</span><span class="p">(</span><span class="s">'your-source-slug'</span><span class="p">)</span>
+<span class="c"># or get by id</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">get_source</span><span class="p">(</span><span class="mi">12345</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight javascript"><code><span class="c1">// Node.js</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="c1">// Browser</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popily</span><span class="p">(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="c1">// Get by slug</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getSource</span><span class="p">(</span><span class="s1">'your-source-slug'</span><span class="p">)</span>
+<span class="c1">// or get by id</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getSource</span><span class="p">(</span><span class="mi">12345</span><span class="p">)</span>
+</code></pre>
 
 <table><thead>
 <tr>
@@ -462,7 +500,7 @@
 </tr>
 </tbody></table>
 
-<h2 id="explore-source">Explore source</h2>
+<h2 id="exploring-your-data-sources">Exploring your data sources</h2>
 
 <blockquote>
 <p>Example API response after creating a new source</p>
@@ -473,15 +511,20 @@
 }
 </code></pre>
 
-<p>We’re exploring this data through the API, but once a data source has been added, you can also explore it through the Popily user interface. In the API response after you create a new data source, you’ll see an explore_path property, which is where you’ll find your new source via the interface.</p>
+<p>We’re exploring this data through the API, but once a data <code class="prettyprint">source</code> has been added, you can also explore it through the Popily user interface. In the API response after you create a new data source, you’ll see an <code class="prettyprint">explore_path</code> property, which is where you’ll find your new source via the interface.</p>
 
 <h2 id="list-sources">List sources</h2>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily_api</span>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">popily_api</span> <span class="kn">import</span> <span class="n">Popily</span>
+<span class="n">popily</span> <span class="o">=</span> <span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR TOKEN'</span><span class="p">)</span>
 
 <span class="c"># Get source list</span>
-<span class="n">popily_api</span><span class="o">.</span><span class="n">get_sources</span><span class="p">()</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">get_sources</span><span class="p">()</span>
 </code></pre>
-<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+<pre class="highlight javascript"><code><span class="c1">// Node.js</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="c1">// Browser</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popily</span><span class="p">(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
 
 <span class="c1">// Get source list</span>
 <span class="nx">popily</span><span class="p">.</span><span class="nx">getSources</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">sources</span><span class="p">)</span> <span class="p">{</span>
@@ -531,7 +574,7 @@
 }
 </code></pre>
 
-<p>Lists all source resources created by a user.</p>
+<p>Of course if you prefer the API, you can explore the columns and <code class="prettyprint">insight</code> objects associated with your <code class="prettyprint">source</code> that way as well. If you&rsquo;d like to get a list of all your <code class="prettyprint">source</code> objects, here&rsquo;s how:</p>
 
 <h3 id="api-response-objects">API response objects</h3>
 
@@ -542,37 +585,45 @@
 <li><strong>results:</strong> (see <a href="#get_source">get_source</a> for full explanation)</li>
 </ul>
 
-<h1 id="insights-endpoint">Insights endpoint</h1>
+<h1 id="insights">Insights</h1>
 
-<p>When <code class="prettyprint">source</code> resources are created in Popily, our Mechanical Turk technology creates a large sample space of relationships between columns. In Popily, each of these relationships is called an <code class="prettyprint">insight</code> and is represented by a <code class="prettyprint">chart</code>.</p>
-
-<p>For most users, the workflow will be:</p>
-
-<ol>
-<li><a href="#get-insight">Retrieve the insight</a> for the desired relationship(s)</li>
-<li><a href="#customize-chart">Customize the insight&rsquo;s chart</a> (e.g. removing values, datetime grouping)</li>
-</ol>
+<p>Our Mechanical Tukey engine performs a bunch of calculations that represent the relationships between columns in your <code class="prettyprint">source</code>. In Popily, each of these relationships is called an <code class="prettyprint">insight</code>.</p>
 
 <h2 id="list-insights">List insights</h2>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily_api</span>
 
-<span class="c"># Get insights about Column A and Column B from sourcev 34242</span>
-<span class="n">popily</span><span class="o">.</span><span class="n">get_insights</span><span class="p">(</span><span class="mi">324442</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'Column A'</span><span class="p">,</span><span class="s">'Column B'</span><span class="p">])</span>
+<p>You can get lists of <code class="prettyprint">insight</code> objects for a given <code class="prettyprint">source</code>.</p>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">popily_api</span> <span class="kn">import</span> <span class="n">Popily</span>
+
+<span class="n">popily</span> <span class="o">=</span> <span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR TOKEN'</span><span class="p">)</span>
+
+<span class="c"># Get all insights for a source by its id</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">get_insights</span><span class="p">(</span><span class="mi">324442</span><span class="p">)</span>
+
+<span class="c"># Get all insights for a source by its slug</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">get_insights</span><span class="p">(</span><span class="s">'some-source-slug'</span><span class="p">)</span>
 </code></pre>
-<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
-<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsights</span><span class="p">(</span><span class="mi">324442</span><span class="p">,</span> <span class="p">{</span>
-  <span class="s1">'columns'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Column A'</span><span class="p">,</span><span class="s1">'Column B'</span><span class="p">]</span>
-  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insights</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// insights</span>
-  <span class="p">});</span>
+<pre class="highlight javascript"><code><span class="c1">// Node.js</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
 
+<span class="c1">// Browser</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popily</span><span class="p">(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="c1">// Get all insights for a source by its id</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsights</span><span class="p">(</span><span class="mi">324442</span><span class="p">,</span> <span class="p">{},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insights</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// insights</span>
+<span class="p">});</span>
+
+<span class="c1">// Get all insights for a source by its slug</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsights</span><span class="p">(</span><span class="s1">'some-source-slug'</span><span class="p">,</span> <span class="p">{},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insights</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// insights</span>
+<span class="p">});</span>
 </code></pre>
 
 <blockquote>
 <p>Example API response</p>
 </blockquote>
 <pre class="highlight plaintext"><code>{
-    "count": 1,
+    "count": 30,
     "previous": null,
     "results": [{
         "title": "Number of ALIGN grouped by SEX",
@@ -585,7 +636,7 @@
         "z_label": "",
         "insight_type": "count_by_category_by_category"
     }],
-    "next": null
+    "next": "https://popily.com/api/insights/?source=429&amp;page=2"
 }
 </code></pre>
 
@@ -600,8 +651,8 @@
 </thead><tbody>
 <tr>
 <td>source</td>
-<td>integer</td>
-<td>id for the source.</td>
+<td>integer or string</td>
+<td>id or slug for the source.</td>
 </tr>
 <tr>
 <td>columns</td>
@@ -609,30 +660,277 @@
 <td>List of column names in a source.</td>
 </tr>
 <tr>
-<td>insight_types</td>
+<td>insight_actions</td>
 <td>list</td>
 <td>The type of analysis used in the insights.</td>
 </tr>
 </tbody></table>
 
-<h2 id="get-insight">Get insight</h2>
+<h2 id="selecting-specific-column-relationships">Selecting specific column relationships</h2>
+
+<p>Most of the time you&rsquo;ll want to filter your list of <code class="prettyprint">insights</code> to those that represent the relationship between specific columns of interest.</p>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">popily_api</span> <span class="kn">import</span> <span class="n">Popily</span>
+
+<span class="n">popily</span> <span class="o">=</span> <span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR TOKEN'</span><span class="p">)</span>
+
+<span class="c"># Get all insights that represent the relationship between Column A and Column B</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s">'Column A'</span><span class="p">,</span>
+  <span class="s">'Column B'</span>
+<span class="p">]</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">get_insights</span><span class="p">(</span><span class="s">'some-source-slug'</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight javascript"><code><span class="c1">// Node.js</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="c1">// Browser</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popily</span><span class="p">(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">columns</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s1">'Column A'</span><span class="p">,</span>
+  <span class="s1">'Column B'</span>
+<span class="p">];</span>
+
+<span class="c1">// Get all insights that represent the relationship between Column A and Column B</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsights</span><span class="p">(</span><span class="s1">'some-source-slug'</span><span class="p">,</span> <span class="p">{</span><span class="na">columns</span><span class="p">:</span> <span class="nx">columns</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insights</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// insights</span>
+<span class="p">});</span>
+</code></pre>
+
+<h2 id="limiting-by-analysis">Limiting by analysis</h2>
+
+<p>You can further limit your list of <code class="prettyprint">insight</code> objects by the type of analysis Popily performed. We call this analysis an <code class="prettyprint">insight_action</code>.</p>
+
+<p>An <code class="prettyprint">insight_action</code> is an aggregation (like a count, sum or average) or other analysis (like a comparison) performed for a particular column combination. </p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>average</td>
+<td>Average of a number</td>
+</tr>
+<tr>
+<td>sum</td>
+<td>Total of a number</td>
+</tr>
+<tr>
+<td>count</td>
+<td>Number of rows, used for categories and dates</td>
+</tr>
+<tr>
+<td>ratio</td>
+<td>Percentage of rows, used for categories and dates</td>
+</tr>
+<tr>
+<td>comparison</td>
+<td>Compares two numbers, produces scatterplots</td>
+</tr>
+<tr>
+<td>geo</td>
+<td>Geospatial information, produces maps</td>
+</tr>
+</tbody></table>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">popily_api</span> <span class="kn">import</span> <span class="n">Popily</span>
+
+<span class="n">popily</span> <span class="o">=</span> <span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR TOKEN'</span><span class="p">)</span>
+
+<span class="c"># Get all insights that represent the relationship between Column A and Column B</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s">'Column A'</span><span class="p">,</span>
+  <span class="s">'Column B'</span>
+<span class="p">]</span>
+
+<span class="c"># Let's say Column A is a number. We only want insights that look at the average</span>
+<span class="c"># of Column A.</span>
+<span class="n">insight_actions</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s">'average'</span>
+<span class="p">]</span>
+
+<span class="n">popily</span><span class="o">.</span><span class="n">get_insights</span><span class="p">(</span><span class="s">'some-source-slug'</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">average</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight javascript"><code><span class="c1">// Node.js</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="c1">// Browser</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popily</span><span class="p">(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="c1">// Get all insights that represent the relationship between Column A and Column B</span>
+<span class="kd">var</span> <span class="nx">columns</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s1">'Column A'</span><span class="p">,</span>
+  <span class="s1">'Column B'</span>
+<span class="p">];</span>
+
+<span class="c1">// Let's say Column A is a number. We only want insights that look at the average</span>
+<span class="c1">// of Column A.</span>
+<span class="kd">var</span> <span class="nx">insightActions</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s1">'average'</span>
+<span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span><span class="na">columns</span><span class="p">:</span> <span class="nx">columns</span><span class="p">,</span> <span class="na">insight_actions</span><span class="p">:</span> <span class="nx">insightActions</span><span class="p">};</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsights</span><span class="p">(</span><span class="s1">'some-source-slug'</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insights</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// insights</span>
+<span class="p">});</span>
+</code></pre>
+
+<h2 id="filtering-your-data">Filtering your data</h2>
+
+<p>You can also request &ldquo;slices&rdquo; of the returned <code class="prettyprint">insight</code> objects by applying filters to the columns you request from the API. </p>
+
+<p>This is a powerful feature that gives you fine-grained control over how your data is presented. At the moment filters are limited to category columns, but coming soon we&rsquo;ll have support for datetime and number columns as well &ndash; for example filtering only to show only values that fall between March 1, 2016 and March 7, 2016 or filtering to show only values that are greater than 0. </p>
+
+<p>The format of a filter is always the same:</p>
+
+<p><code class="prettyprint">{ column: &#39;column name&#39;, values: [&#39;value 1&#39;, &#39;value 2&#39;], op: &#39;eq&#39; }</code></p>
+
+<p>The <code class="prettyprint">op</code> property stands for &ldquo;operation&rdquo; and is optional. It defaults to &lsquo;eq&rsquo; (which stands for &ldquo;equals&rdquo;). Support for additional operations like &#39;gt&rsquo; (greater than), &#39;lt&rsquo; (less than), etc are coming soon.</p>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">popily_api</span> <span class="kn">import</span> <span class="n">Popily</span>
+
+<span class="n">popily</span> <span class="o">=</span> <span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR TOKEN'</span><span class="p">)</span>
+
+<span class="c"># Get all insights that represent the relationship between Column A and Column B</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s">'Column A'</span><span class="p">,</span>
+  <span class="s">'Column B'</span>
+<span class="p">]</span>
+
+<span class="c"># Let's say Column A is a number. We only want insights that look at the average</span>
+<span class="c"># of Column A.</span>
+<span class="n">insight_actions</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s">'average'</span>
+<span class="p">]</span>
+
+<span class="c"># Let's say Column B is a category and it's values are colors. We only want to </span>
+<span class="c"># show values associated with red and green. </span>
+<span class="n">filters</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span>
+    <span class="s">'column'</span><span class="p">:</span> <span class="s">'Column B'</span><span class="p">,</span>
+    <span class="s">'values'</span><span class="p">:</span> <span class="p">[</span><span class="s">'red'</span><span class="p">,</span> <span class="s">'green'</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="n">popily</span><span class="o">.</span><span class="n">get_insights</span><span class="p">(</span><span class="s">'some-source-slug'</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">average</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight javascript"><code><span class="c1">// Node.js</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="c1">// Browser</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popily</span><span class="p">(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="c1">// Get all insights that represent the relationship between Column A and Column B</span>
+<span class="kd">var</span> <span class="nx">columns</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s1">'Column A'</span><span class="p">,</span>
+  <span class="s1">'Column B'</span>
+<span class="p">];</span>
+
+<span class="c1">// Let's say Column A is a number. We only want insights that look at the average</span>
+<span class="c1">// of Column A.</span>
+<span class="kd">var</span> <span class="nx">insightActions</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s1">'average'</span>
+<span class="p">];</span>
+
+<span class="c1">// Let's say Column B is a category and it's values are colors. We only want to </span>
+<span class="c1">// show values associated with red and green. </span>
+<span class="kd">var</span> <span class="nx">filters</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span>
+    <span class="s1">'column'</span><span class="p">:</span> <span class="s1">'Column B'</span><span class="p">,</span>
+    <span class="s1">'values'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'red'</span><span class="p">,</span> <span class="s1">'green'</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">columns</span><span class="p">:</span> <span class="nx">columns</span><span class="p">,</span> 
+    <span class="na">insight_actions</span><span class="p">:</span> <span class="nx">insightActions</span><span class="p">,</span>
+    <span class="na">filters</span><span class="p">:</span> <span class="nx">filters</span>
+<span class="p">};</span>
+
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsights</span><span class="p">(</span><span class="s1">'some-source-slug'</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insights</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// insights</span>
+<span class="p">});</span>
+</code></pre>
+
+<h2 id="getting-single-insights">Getting single insights</h2>
+
+<p>Sometimes you just want one <code class="prettyprint">insight</code>, not a list. This can be achieved in two ways. The first builds on the list examples from above. There is only one <code class="prettyprint">insight_action</code> (aka type of analysis) performed on any given combination of columns. So, say you had two columns, Column A, a number, and Column B, a category. Popily will calculate the average of Column A for each category in Column B. If you ask for these two columns with the <code class="prettyprint">insight_action</code> of &ldquo;average,&rdquo; you can be sure you&rsquo;ll get one result.</p>
+
+<p>In this situation, you can include <code class="prettyprint">single</code> in your request to let Popily know that you only want one object, not a list. <strong>Note</strong>: you can add <code class="prettyprint">single</code> to any request, even if you&rsquo;re not sure that request will only return one object. If more than one <code class="prettyprint">insight</code> would normally be returned, Popily will choose the one it thinks is most interesting. </p>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">popily_api</span> <span class="kn">import</span> <span class="n">Popily</span>
+
+<span class="n">popily</span> <span class="o">=</span> <span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR TOKEN'</span><span class="p">)</span>
+
+<span class="c"># Get all insights that represent the relationship between Column A and Column B</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s">'Column A'</span><span class="p">,</span>
+  <span class="s">'Column B'</span>
+<span class="p">]</span>
+
+<span class="c"># Let's say Column A is a number. We only want insights that look at the average</span>
+<span class="c"># of Column A.</span>
+<span class="n">insight_actions</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s">'average'</span>
+<span class="p">]</span>
+
+<span class="n">popily</span><span class="o">.</span><span class="n">get_insights</span><span class="p">(</span><span class="s">'some-source-slug'</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">average</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight javascript"><code><span class="c1">// Node.js</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="c1">// Browser</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popily</span><span class="p">(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="c1">// Get all insights that represent the relationship between Column A and Column B</span>
+<span class="kd">var</span> <span class="nx">columns</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s1">'Column A'</span><span class="p">,</span>
+  <span class="s1">'Column B'</span>
+<span class="p">];</span>
+
+<span class="c1">// Let's say Column A is a number. We only want insights that look at the average</span>
+<span class="c1">// of Column A.</span>
+<span class="kd">var</span> <span class="nx">insightActions</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s1">'average'</span>
+<span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">columns</span><span class="p">:</span> <span class="nx">columns</span><span class="p">,</span> 
+    <span class="na">insight_actions</span><span class="p">:</span> <span class="nx">insightActions</span><span class="p">,</span>
+    <span class="na">single</span><span class="p">:</span> <span class="kc">true</span>
+<span class="p">};</span>
+
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsights</span><span class="p">(</span><span class="s1">'some-source-slug'</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insights</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// insights</span>
+<span class="p">});</span>
+</code></pre>
+
+<p>Of course, just like with <code class="prettyprint">source</code> objects, you can also retrieve <code class="prettyprint">insight</code> objects by their slug or id. The slug can be found in the URL of the <code class="prettyprint">insight</code> when viewed through the UI. It&rsquo;s usually something like &ldquo;title-of-insight-1.&rdquo;</p>
 <pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily_api</span>
 
-<span class="c"># Get insight 249985</span>
-<span class="n">popily</span><span class="o">.</span><span class="n">get_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="n">popily</span> <span class="o">=</span> <span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR API KEY'</span><span class="p">)</span>
+
+<span class="c"># Get by id</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">get_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">)</span>
+
+<span class="c"># Get by slug</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">get_insight</span><span class="p">(</span><span class="s">'some-slug'</span><span class="p">)</span>
 </code></pre>
-<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+<pre class="highlight javascript"><code><span class="c1">// Node.js</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
 
-<span class="kd">var</span> <span class="nx">filters</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="c1">// Browser</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popily</span><span class="p">(</span><span class="s1">'YOUR API KEY'</span><span class="p">)</span>
 
-<span class="c1">// Get insight 249985</span>
-<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span> <span class="p">{</span><span class="na">filters</span><span class="p">:</span> <span class="nx">filters</span><span class="p">},</span> <span class="p">{</span>
-  <span class="na">height</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-  <span class="na">width</span><span class="p">:</span> <span class="mi">500</span>
-  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insight</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">iframe</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">'iframe'</span><span class="p">);</span>
-    <span class="nx">iframe</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">insight</span><span class="p">.</span><span class="nx">embed_url</span><span class="p">;</span>
-  <span class="p">});</span>
+
+<span class="c1">// Get insight by id</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span> <span class="p">{},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insight</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">insight</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">// Get insight by slug</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsight</span><span class="p">(</span><span class="s1">'some-slug'</span><span class="p">,</span> <span class="p">{},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insight</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">insight</span><span class="p">);</span>
+<span class="p">});</span>
 </code></pre>
 
 <blockquote>
@@ -652,139 +950,110 @@
 }
 </code></pre>
 
-<p>Retrieves details on a single insight.</p>
-
 <table><thead>
 <tr>
 <th>Parameter</th>
 <th>Format</th>
-<th>Default</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>id</td>
+<td>id or slug</td>
 <td>string</td>
-<td>Insight UID</td>
-<td></td>
+<td>Insight unique id</td>
 </tr>
 <tr>
 <td>height</td>
 <td>integer</td>
-<td>Height in pixels</td>
-<td></td>
+<td>Height in pixels (for displaying on a web page)</td>
 </tr>
 <tr>
 <td>width</td>
 <td>integer</td>
-<td>Width in pixels</td>
-<td></td>
+<td>Width in pixels (for display on a web page)</td>
 </tr>
 <tr>
 <td>filters</td>
 <td>JSON object</td>
-<td>Data filters applied to insight. See <a href="#filtering-chart-data">insight filters</a>.</td>
-<td></td>
+<td>Filters applied to insight. See <a href="#filtering-chart-data">insight filters</a></td>
+</tr>
+<tr>
+<td>full</td>
+<td>string</td>
+<td>If included will return x, y and z values</td>
 </tr>
 </tbody></table>
 
-<p>If you want to visualize the data yourself you can get the x, y and z values (see the insight documentation for more details), or you can use the charts Popily generates for you via the insight’s embed_url property. Just drop it in an iframe:</p>
+<h2 id="displaying-insights">Displaying insights</h2>
 
-<p><code class="prettyprint">&lt;iframe frameborder=&quot;0&quot; height=&quot;500&quot; width=&quot;500&quot; src=&quot;https://popily.com/widget/chart/hair-align-2/-/?style=compact-500-500&amp;app_id=18&amp;sig=63bb87883e20548076aefac271911c13&amp;timestamp=1456114892&quot;&gt;&lt;/iframe&gt;</code></p>
-
-<h2 id="customize-chart">Customize chart</h2>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily_api</span>
-
-<span class="c"># Customize insight 249985</span>
-<span class="n">popily</span><span class="o">.</span><span class="n">customize_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span>
-                         <span class="n">title</span><span class="o">=</span><span class="s">'This Chart is Awesome'</span><span class="p">,</span>
-                         <span class="n">x_label</span><span class="o">=</span><span class="s">'Goodness'</span><span class="p">,</span>
-                         <span class="n">y_label</span><span class="o">=</span><span class="s">'Genders'</span><span class="p">,</span>
-                         <span class="n">category_order</span><span class="o">=</span><span class="s">'z-a'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
-
-<span class="c1">// Customize insight 249985</span>
-<span class="kd">var</span> <span class="nx">filters</span> <span class="o">=</span> <span class="p">[];</span>
-
-<span class="nx">popily</span><span class="p">.</span><span class="nx">customize_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span> <span class="p">{</span><span class="na">filters</span><span class="p">:</span> <span class="nx">filters</span><span class="p">},</span> <span class="p">{</span>
-         <span class="na">title</span><span class="p">:</span> <span class="s1">'This Chart is Awesome'</span><span class="p">,</span>
-         <span class="na">x_label</span><span class="p">:</span> <span class="s1">'Goodness'</span><span class="p">,</span>
-         <span class="na">y_label</span><span class="p">:</span> <span class="s1">'Genders'</span><span class="p">,</span>
-         <span class="na">category_order</span><span class="p">:</span> <span class="s1">'z-a'</span>
- <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insight</span><span class="p">)</span> <span class="p">{</span>
- <span class="p">});</span>
-
+<p>Once you have retrieved an insight, you can add it to your web application by dropping it in an iframe. <strong>Note</strong>: a JavaScript library that you can use to attach responsive visualizations directly to your DOM elements is coming soon. </p>
+<pre class="highlight html"><code><span class="nt">&lt;iframe</span> <span class="na">frameborder=</span><span class="s">"0"</span> <span class="na">height=</span><span class="s">"500"</span> <span class="na">width=</span><span class="s">"500"</span> <span class="na">src=</span><span class="s">"https://popily.com/widget/chart/hair-align-2/-/?style=compact-500-500&amp;app_id=18&amp;sig=63bb87883e20548076aefac271911c13&amp;timestamp=1456114892"</span><span class="nt">&gt;&lt;/iframe&gt;</span>
 </code></pre>
 
-<p>Customize the display of a single insight. Note, currently customizations are bound to an insight and thus an insight can only have a single customization.</p>
+<h2 id="customize-display">Customize display</h2>
+
+<p>When you retrieve an <code class="prettyprint">insight</code> you can also customize its display. Almost any aspect of a Popily visualization can be customized, including:</p>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Format</th>
+<th>Property</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>title</td>
-<td>string</td>
-<td>Custom chart title</td>
+<td>The title of the chart</td>
 </tr>
 <tr>
 <td>x_label</td>
-<td>string</td>
-<td>Custom x label</td>
+<td>Text along the x axis</td>
 </tr>
 <tr>
 <td>y_label</td>
-<td>string</td>
-<td>Custom y label</td>
+<td>Text along the y axis</td>
 </tr>
 <tr>
 <td>category_order</td>
-<td>string</td>
-<td>Custom ordering of categories. Allowed values: &lsquo;a-z&rsquo;, &#39;z-a&rsquo;, &#39;asc&rsquo;, and &#39;dsc&rsquo;</td>
+<td>Order of bars in a bar chart. Options are: auto, asc, dsc, a-z, z-a</td>
+</tr>
+<tr>
+<td>time_interval</td>
+<td>minute, hour, day, week, month, year</td>
 </tr>
 </tbody></table>
-
-<h2 id="filtering-chart-data">Filtering chart data</h2>
 <pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily_api</span>
 
-<span class="n">filters</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-        <span class="s">'column'</span><span class="p">:</span> <span class="s">'SEX'</span><span class="p">,</span>
-        <span class="s">'values'</span><span class="p">:</span> <span class="p">[</span><span class="s">'Genderless Characters'</span><span class="p">,</span><span class="s">'Transgender Characters'</span><span class="p">]</span>
-    <span class="p">}</span>
-<span class="p">]</span>
+<span class="n">popily</span> <span class="o">=</span> <span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR API KEY'</span><span class="p">)</span>
 
-<span class="n">insight</span> <span class="o">=</span> <span class="n">popily</span><span class="o">.</span><span class="n">get_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="n">filters</span><span class="p">)</span>
+<span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s">'title'</span><span class="p">:</span> <span class="s">'Your title'</span><span class="p">,</span>
+  <span class="s">'x_label'</span><span class="p">:</span> <span class="s">'Your X Label'</span><span class="p">,</span>
+  <span class="s">'category_order'</span><span class="p">:</span> <span class="s">'z-a'</span>
+<span class="p">}</span>
+
+<span class="n">popily</span><span class="o">.</span><span class="n">get_insight</span><span class="p">(</span><span class="s">'some-slug'</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre>
-<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+<pre class="highlight javascript"><code><span class="c1">// Node.js</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
 
-<span class="kd">var</span> <span class="nx">filters</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-        <span class="s1">'column'</span><span class="p">:</span> <span class="s1">'SEX'</span><span class="p">,</span>
-        <span class="s1">'values'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Genderless Characters'</span><span class="p">,</span><span class="s1">'Transgender Characters'</span><span class="p">]</span>
-    <span class="p">}</span>
-<span class="p">];</span>
+<span class="c1">// Browser</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popily</span><span class="p">(</span><span class="s1">'YOUR API KEY'</span><span class="p">)</span>
 
-<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span> <span class="p">{</span><span class="na">filters</span><span class="p">:</span> <span class="nx">filters</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insight</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// here process insight</span>
+<span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">title</span><span class="p">:</span> <span class="s1">'Your title'</span><span class="p">,</span>
+  <span class="na">x_label</span><span class="p">:</span> <span class="s1">'Your x label'</span><span class="p">,</span>
+  <span class="na">category_order</span><span class="p">:</span> <span class="s1">'z-a'</span>
+<span class="p">};</span>
+
+<span class="c1">// Get insight by slug</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsight</span><span class="p">(</span><span class="s1">'some-slug'</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insight</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">insight</span><span class="p">);</span>
 <span class="p">});</span>
-
 </code></pre>
 
-<p>Sometimes you want to tell a more specific story. With Popily you can apply filters to any insight or list or insights, and then assign customizations that are specific to the filters you’ve applied. Filters allow you to control the data within a relationship insight.</p>
+<h2 id="filtering-insight-data">Filtering insight data</h2>
 
-<p>Example filter param to include only &#39;Genderless Characters&rsquo; and &#39;Transgender Characters&rsquo; in a column titled <code class="prettyprint">SEX</code>:</p>
-
-<p><code class="prettyprint">[
-    {
-        &#39;column&#39;: &#39;SEX&#39;,
-        &#39;values&#39;: [&#39;Genderless Characters&#39;,&#39;Transgender Characters&#39;]
-    }
-]</code></p>
+<p>Just like with lists of <code class="prettyprint">insight</code> objects, you can filter the data of a single <code class="prettyprint">insight</code>. See the <a href="#filtering-your-data">Filtering your data</a> section for details.</p>
 
 <h1 id="users-endpoint">Users endpoint</h1>
 
@@ -838,510 +1107,22 @@
 <li><strong>groups_member:</strong> List of groups to which the user belongs.</li>
 </ul>
 
-<h1 id="python-client">Python client</h1>
+<h1 id="api-clients">API Clients</h1>
 
-<p>We love Python so we couldn&rsquo;t help but make an official Popily client for Python. You can check it out on <a href="https://pypi.python.org/pypi/popily-api/0.0.6">pypi</a> and <a href="https://github.com/popily/popily-api">GitHub</a>.</p>
+<h2 id="python">Python</h2>
 
-<h2 id="install-client">Install client</h2>
-<pre class="highlight python"><code><span class="n">pip</span> <span class="n">install</span> <span class="n">popily</span><span class="o">-</span><span class="n">api</span>
-</code></pre>
-<pre class="highlight javascript"><code><span class="nx">npm</span> <span class="nx">install</span> <span class="nx">popily</span>
-</code></pre>
+<p>You can check out the official Popily client on <a href="https://pypi.python.org/pypi/popily-api/0.0.7">pypi</a> and <a href="https://github.com/popily/popily-api">GitHub</a>.</p>
 
-<p>Installing the Popily API client is easy with the package manager <a href="https://pypi.python.org/pypi/pip">pip</a>.</p>
+<h2 id="javascript">JavaScript</h2>
 
-<h2 id="upgrade-client">Upgrade client</h2>
-<pre class="highlight python"><code><span class="n">pip</span> <span class="n">install</span> <span class="n">popily</span><span class="o">-</span><span class="n">api</span> <span class="o">--</span><span class="n">upgrade</span>
-</code></pre>
-<pre class="highlight javascript"><code><span class="nx">npm</span> <span class="nx">install</span> <span class="nx">popily</span>
-</code></pre>
-
-<p>Upgrading the python client can be accomplished with the <code class="prettyprint">-upgrade</code> argument.</p>
-
-<h2 id="add_source">add_source</h2>
-<pre class="highlight python"><code>
-<span class="c"># Three examples of add_source</span>
-
-<span class="kn">import</span> <span class="nn">popily_api</span>
-
-<span class="n">popily</span> <span class="o">=</span> <span class="n">popily_api</span><span class="o">.</span><span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR API TOKEN'</span><span class="p">)</span>
-
-<span class="c"># Give it a title (optional)</span>
-<span class="n">title</span> <span class="o">=</span> <span class="s">'DC Comics Data'</span>
-
-<span class="c"># Define the column types</span>
-<span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-        <span class="s">'column_header'</span><span class="p">:</span> <span class="s">'name'</span><span class="p">,</span>
-        <span class="s">'data_type'</span><span class="p">:</span> <span class="s">'rowlabel'</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-        <span class="s">'column_header'</span><span class="p">:</span> <span class="s">'HAIR'</span><span class="p">,</span>
-        <span class="s">'data_type'</span><span class="p">:</span> <span class="s">'category'</span>
-    <span class="p">},</span>
-<span class="p">]</span>
-
-<span class="c"># If the data is in a CSV file locally</span>
-<span class="n">file_data</span> <span class="o">=</span> <span class="p">{</span><span class="s">'data'</span><span class="p">:</span> <span class="nb">open</span><span class="p">(</span><span class="s">'/path/to/the/file.csv'</span><span class="p">)}</span>
-<span class="n">source</span> <span class="o">=</span> <span class="n">popily</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span><span class="n">file_obj</span><span class="o">=</span><span class="n">file_data</span><span class="p">,</span>
-                                <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
-
-<span class="c"># If the dataset is remote</span>
-<span class="n">url</span> <span class="o">=</span> <span class="s">'https://example.com/dataset.csv'</span>
-<span class="n">source</span> <span class="o">=</span> <span class="n">popily</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
-                                <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
-
-<span class="c"># If the data is from an SQL query</span>
-<span class="n">connection_string</span> <span class="o">=</span> <span class="s">'mysql://username:password@host:port/database'</span>
-<span class="n">query</span> <span class="o">=</span> <span class="s">'SELECT * FROM TableA'</span>
-<span class="n">source</span> <span class="o">=</span> <span class="n">popily</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
-                        <span class="n">connection_string</span><span class="o">=</span><span class="n">connection_string</span><span class="p">,</span>
-                        <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
-                        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight javascript"><code>
-<span class="c1">// Three examples of add_source</span>
-
-<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
-
-<span class="err">#</span> <span class="nx">Give</span> <span class="nx">it</span> <span class="nx">a</span> <span class="nx">title</span> <span class="p">(</span><span class="nx">optional</span><span class="p">)</span>
-<span class="kd">var</span> <span class="nx">title</span> <span class="o">=</span> <span class="s1">'DC Comics Data'</span><span class="p">;</span>
-
-<span class="err">#</span> <span class="nx">Define</span> <span class="nx">the</span> <span class="nx">column</span> <span class="nx">types</span>
-<span class="kd">var</span> <span class="nx">columns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span>
-        <span class="s1">'column_header'</span><span class="p">:</span> <span class="s1">'name'</span><span class="p">,</span>
-        <span class="s1">'data_type'</span><span class="p">:</span> <span class="s1">'rowlabel'</span>
-    <span class="p">},</span>
-    <span class="p">{</span>
-        <span class="s1">'column_header'</span><span class="p">:</span> <span class="s1">'HAIR'</span><span class="p">,</span>
-        <span class="s1">'data_type'</span><span class="p">:</span> <span class="s1">'category'</span>
-    <span class="p">},</span>
-<span class="p">]</span>
-
-<span class="err">#</span> <span class="nx">If</span> <span class="nx">the</span> <span class="nx">data</span> <span class="nx">is</span> <span class="k">in</span> <span class="nx">a</span> <span class="nx">CSV</span> <span class="nx">file</span> <span class="nx">locally</span>
-<span class="kd">var</span> <span class="nx">filePath</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'data'</span><span class="p">:</span> <span class="s1">'/path/to/the/file.csv'</span><span class="p">}</span>
-<span class="nx">popily</span><span class="p">.</span><span class="nx">addSource</span><span class="p">({</span>
-  <span class="na">title</span><span class="p">:</span> <span class="nx">title</span>
-  <span class="na">columns</span><span class="p">:</span> <span class="nx">columns</span><span class="p">,</span> 
-  <span class="na">data</span><span class="p">:</span> <span class="nx">filePath</span>
-  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// ..</span>
-  <span class="p">});</span>
-
-<span class="err">#</span> <span class="nx">If</span> <span class="nx">the</span> <span class="nx">dataset</span> <span class="nx">is</span> <span class="nx">remote</span>
-<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s1">'https://example.com/dataset.csv'</span>
-<span class="nx">popily</span><span class="p">.</span><span class="nx">addSource</span><span class="p">({</span>
-    <span class="na">title</span><span class="p">:</span> <span class="nx">title</span>
-    <span class="na">columns</span><span class="p">:</span> <span class="nx">columns</span><span class="p">,</span> 
-    <span class="na">url</span><span class="p">:</span> <span class="nx">url</span>
-  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// ..</span>
-  <span class="p">});</span>
-
-<span class="err">#</span> <span class="nx">If</span> <span class="nx">the</span> <span class="nx">data</span> <span class="nx">is</span> <span class="nx">from</span> <span class="nx">an</span> <span class="nx">SQL</span> <span class="nx">query</span>
-<span class="kd">var</span> <span class="nx">connectionString</span> <span class="o">=</span> <span class="s1">'mysql://username:password@host:port/database'</span>
-<span class="kd">var</span> <span class="nx">query</span> <span class="o">=</span> <span class="s1">'SELECT * FROM TableA'</span>
-<span class="nx">popily</span><span class="p">.</span><span class="nx">addSource</span><span class="p">({</span>
-  <span class="na">title</span><span class="p">:</span> <span class="nx">title</span>
-  <span class="na">columns</span><span class="p">:</span> <span class="nx">columns</span><span class="p">,</span> 
-  <span class="na">connection_string</span><span class="p">:</span> <span class="nx">connectionString</span><span class="p">,</span>
-  <span class="na">query</span><span class="p">:</span> <span class="nx">query</span>
-  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// ..</span>
-  <span class="p">});</span>
-
-</code></pre>
-
-<p>Creates a new data source resource in Popily.</p>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Format</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>url</td>
-<td>string</td>
-<td>Full URL where the data file or API endpoint can be accessed.</td>
-</tr>
-<tr>
-<td>title</td>
-<td>string</td>
-<td>Human-readable name of the source.</td>
-</tr>
-<tr>
-<td>columns</td>
-<td>JSON object</td>
-<td><a href="#data-types">A list of column headers and their data types</a>.</td>
-</tr>
-<tr>
-<td>type</td>
-<td>string</td>
-<td>The type of data store providing data to the source: <em>e_csv</em> (CSV file accessed via URL) <em>e_xls</em> (Excel file accessed via URL) <em>e_json</em> (JSON accessed via URL) <em>sql</em> (results from SQL query). When absent, type is inferred.</td>
-</tr>
-<tr>
-<td>sheetname</td>
-<td>string</td>
-<td>Used when the data source is an Excel file. Denotes the name of the sheet to use.</td>
-</tr>
-<tr>
-<td>connection_string</td>
-<td>string</td>
-<td>Full connection string to your MySQL or Postgres database.</td>
-</tr>
-<tr>
-<td>query</td>
-<td>string</td>
-<td>The SQL query you&rsquo;d like to run on your database.</td>
-</tr>
-</tbody></table>
-
-<h2 id="get_sources">get_sources</h2>
-<pre class="highlight python"><code><span class="c"># Get sources</span>
-<span class="n">sources</span> <span class="o">=</span> <span class="n">popily_api</span><span class="o">.</span><span class="n">get_sources</span><span class="p">()</span>
-</code></pre>
-<pre class="highlight javascript"><code><span class="c1">// Get sources</span>
-<span class="nx">popily</span><span class="p">.</span><span class="nx">getSources</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">sources</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// ..</span>
-<span class="p">});</span>
-</code></pre>
-
-<blockquote>
-<p>Example API response</p>
-</blockquote>
-<pre class="highlight plaintext"><code>{"count": 1,
- "next": "http://popily.com/api/sources/?page=2",
- "previous": None,
- "results": [{"columns": [{"column_header": "SEX",
-             "data_type": "category",
-             "id": 29413,
-             "score": 0.0},
-            {"column_header": "HAIR",
-             "data_type": "category",
-             "id": 29412,
-             "score": 0.0},
-            {"column_header": "EYE",
-             "data_type": "category",
-             "id": 29411,
-             "score": 0.0},
-            {"column_header": "ALIGN",
-             "data_type": "category",
-             "id": 29410,
-             "score": 0.0},
-            {"column_header": "name",
-             "data_type": "rowlabel",
-             "id": 29409,
-             "score": 0.0}],
-             "created_by": 3,
-             "description": None,
-             "explore_path": "/explore/source/dc-wikia-data-3/discoveries/",
-             "id": 2287,
-             "sheetname": None,
-             "slug": "dc-wikia-data-3",
-             "status": "inspecting",
-             "title": "DC Comics Data",
-             "url": None}]
-}
-</code></pre>
-
-<p>Lists all source resources created by a user.</p>
-
-<h3 id="api-response-objects">API response objects</h3>
-
-<ul>
-<li><strong>count:</strong> Number of source resources</li>
-<li><strong>next:</strong> Pagination marker</li>
-<li><strong>previous:</strong> Pagination marker</li>
-<li><strong>results:</strong> (see <a href="#get_source">get_source</a> for full explanation)</li>
-</ul>
-
-<h2 id="get_source">get_source</h2>
-<pre class="highlight python"><code><span class="c"># Get source with id 34242</span>
-<span class="n">popily_api</span><span class="o">.</span><span class="n">get_source</span><span class="p">(</span><span class="mi">34242</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight javascript"><code><span class="c1">// Get source with id 34242</span>
-<span class="nx">popily</span><span class="p">.</span><span class="nx">getSource</span><span class="p">(</span><span class="mi">34242</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// ..</span>
-<span class="p">})</span>
-</code></pre>
-
-<blockquote>
-<p>Example API response</p>
-</blockquote>
-<pre class="highlight plaintext"><code>{
-  "columns": [{"column_header": "HAIR",
-              "data_type": "category",
-              "id": 29382,
-              "score": 0.183804993880959},
-              {"column_header": "ALIGN",
-               "data_type": "category",
-               "id": 29380,
-               "score": 0.17228792581526},
-              {"column_header": "SEX",
-               "data_type": "category",
-               "id": 29383,
-               "score": 0.157287131801953},
-              {"column_header": "EYE",
-               "data_type": "category",
-               "id": 29381,
-               "score": 0.113107718497747},
-              {"column_header": "name",
-               "data_type": "rowlabel",
-               "id": 29379,
-               "score": 0.0}],
-  "created_by": 3,
-  "description": None,
-  "explore_path": u"/explore/source/dc-wikia-data/discoveries/",
-  "id": 2279,
-  "sheetname": None,
-  "slug": "dc-wikia-data",
-  "status": "finished",
-  "title": "DC Comics Data",
-  "url": None
-}
-</code></pre>
-
-<p>Retrieves details on an individual source resource.</p>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Format</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>source</td>
-<td>integer</td>
-<td>id for the source.</td>
-</tr>
-</tbody></table>
-
-<h3 id="api-response-objects">API response objects</h3>
-
-<ul>
-<li><strong>id:</strong> Source UID</li>
-<li><strong>url:</strong> Full URL where the data file or API endpoint can be accessed)</li>
-<li><strong>slug:</strong> Unique slug of the source resource</li>
-<li><strong>title:</strong> Human-readable name</li>
-<li><strong>description:</strong> Human-readable description</li>
-<li><strong>columns:</strong> List of columns
-
-<ul>
-<li><strong>column_header:</strong> Title of column</li>
-<li><strong>data_type:</strong> Type of data in column (<a href="#source-data-types">see source data types</a>)</li>
-<li><strong>id:</strong> Column UID</li>
-<li><strong>score:</strong> &ldquo;Interestingness&rdquo; score (used in some rankings)</li>
-</ul></li>
-<li><strong>created_by:</strong> UID of creating user</li>
-<li><strong>status:</strong> Status of source resource
-
-<ul>
-<li><strong>inspecting:</strong> Initial inspection</li>
-<li><strong>calculating:</strong> Processing underway</li>
-<li><strong>reinspecting:</strong> Secondary inspection</li>
-</ul></li>
-<li><strong>type:</strong> Type of data used to create source resource
-
-<ul>
-<li><strong>e_csv:</strong> CSV file accessed via URL</li>
-<li><strong>e_xls:</strong> Excel file accessed via URL</li>
-<li><strong>e_json:</strong> JSON accessed via URL</li>
-<li><strong>sql:</strong> Results from SQL query</li>
-</ul></li>
-<li><strong>sheetname:</strong> Used when working from Excel files with more than one sheet</li>
-<li><strong>connection_string:</strong> Full connection string to your MySQL or Postgres database</li>
-<li><strong>query:</strong> SQL query you&rsquo;d like to run on your database</li>
-</ul>
-
-<h2 id="get_insights">get_insights</h2>
-<pre class="highlight python"><code><span class="c"># Get insights about Column A and Column B from sourcev 34242</span>
-<span class="n">popily</span><span class="o">.</span><span class="n">get_insights</span><span class="p">(</span><span class="mi">324442</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'Column A'</span><span class="p">,</span><span class="s">'Column B'</span><span class="p">])</span>
-</code></pre>
-<pre class="highlight javascript"><code><span class="c1">// Get insights about Column A and Column B from sourcev 34242</span>
-<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsights</span><span class="p">(</span><span class="mi">324442</span><span class="p">,</span> <span class="p">{</span>
-    <span class="na">columns</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Column A'</span><span class="p">,</span><span class="s1">'Column B'</span><span class="p">]</span>
-  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insights</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// ..</span>
-  <span class="p">});</span>
-</code></pre>
-
-<blockquote>
-<p>Example API response</p>
-</blockquote>
-<pre class="highlight plaintext"><code>{
-    "count": 1,
-    "previous": null,
-    "results": [{
-        "title": "Number of ALIGN grouped by SEX",
-        "x_label": "ALIGN",
-        "y_label": "Number of Records",
-        "filters_key": "",
-        "source": 429,
-        "insight_type_category": "count",
-        "id": 249985,
-        "z_label": "",
-        "insight_type": "count_by_category_by_category"
-    }],
-    "next": null
-}
-</code></pre>
-
-<p>Retrieves a list of insights for a source resource.</p>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Format</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>source</td>
-<td>integer</td>
-<td>id for the source.</td>
-</tr>
-<tr>
-<td>columns</td>
-<td>list</td>
-<td>List of column names in a source.</td>
-</tr>
-<tr>
-<td>insight_types</td>
-<td>list</td>
-<td>The type of analysis used in the insights.</td>
-</tr>
-</tbody></table>
-
-<h2 id="get_insight">get_insight</h2>
-<pre class="highlight python"><code><span class="c"># Get insight 249985</span>
-<span class="n">popily</span><span class="o">.</span><span class="n">get_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight javascript"><code><span class="c1">// Get insight 249985</span>
-<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span>
-  <span class="na">height</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span> 
-  <span class="nx">width</span><span class="o">=</span><span class="mi">500</span>
-  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insight</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// ,,</span>
-  <span class="p">});</span>
-</code></pre>
-
-<blockquote>
-<p>Example API response</p>
-</blockquote>
-<pre class="highlight plaintext"><code>{
-    "embed_url": "https://popily.com/widget/chart/align-hair/-/?style=compact-500-500&amp;app_id=18&amp;sig=8b7c8e557a9ab1bcf4d5d762dda773d2&amp;timestamp=1456113107",
-    "x_label": "ALIGN",
-    "y_label": "Number of Records",
-    "filters_key": "",
-    "source": 429,
-    "title": "Number of ALIGN grouped by SEX",
-    "insight_type_category": "count",
-    "id": 249985,
-    "z_label": "",
-    "insight_type": "count_by_category_by_category"
-}
-</code></pre>
-
-<p>Retrieves details on a single insight.</p>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Format</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>id</td>
-<td>string</td>
-<td>Insight UID</td>
-<td></td>
-</tr>
-<tr>
-<td>height</td>
-<td>integer</td>
-<td>Height in pixels</td>
-<td></td>
-</tr>
-<tr>
-<td>width</td>
-<td>integer</td>
-<td>Width in pixels</td>
-<td></td>
-</tr>
-<tr>
-<td>filters</td>
-<td>JSON object</td>
-<td>Data filters applied to insight. See <a href="#filtering-chart-data">insight filters</a>.</td>
-<td></td>
-</tr>
-</tbody></table>
-
-<p>If you want to visualize the data yourself you can get the x, y and z values (see the insight documentation for more details), or you can use the charts Popily generates for you via the insight’s embed_url property. Just drop it in an iframe:</p>
-
-<p><code class="prettyprint">&lt;iframe frameborder=&quot;0&quot; height=&quot;500&quot; width=&quot;500&quot; src=&quot;https://popily.com/widget/chart/hair-align-2/-/?style=compact-500-500&amp;app_id=18&amp;sig=63bb87883e20548076aefac271911c13&amp;timestamp=1456114892&quot;&gt;&lt;/iframe&gt;</code></p>
-
-<h2 id="customize_insight">customize_insight</h2>
-<pre class="highlight python"><code><span class="c"># Customize insight 249985</span>
-<span class="n">popily</span><span class="o">.</span><span class="n">customize_insight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span>
-                         <span class="n">title</span><span class="o">=</span><span class="s">'This Chart is Awesome'</span><span class="p">,</span>
-                         <span class="n">x_label</span><span class="o">=</span><span class="s">'Goodness'</span><span class="p">,</span>
-                         <span class="n">y_label</span><span class="o">=</span><span class="s">'Genders'</span><span class="p">,</span>
-                         <span class="n">category_order</span><span class="o">=</span><span class="s">'z-a'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight javascript"><code><span class="c1">// Customize insight 249985</span>
-<span class="nx">popily</span><span class="p">.</span><span class="nx">customizeInsight</span><span class="p">(</span><span class="mi">249985</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{</span>
-    <span class="na">title</span><span class="p">:</span> <span class="s1">'This Chart is Awesome'</span><span class="p">,</span>
-    <span class="na">x_label</span><span class="p">:</span> <span class="s1">'Goodness'</span><span class="p">,</span>
-    <span class="na">y_label</span><span class="p">:</span> <span class="s1">'Genders'</span><span class="p">,</span>
-    <span class="na">category_order</span><span class="p">:</span> <span class="s1">'z-a'</span>
-  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insight</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// ..</span>
-  <span class="p">});</span>
-</code></pre>
-
-<p>Customize the display of a single insight. Note, currently customizations are bound to an insight and thus an insight can only have a single customization.</p>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Format</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>title</td>
-<td>string</td>
-<td>Custom chart title</td>
-</tr>
-<tr>
-<td>x_label</td>
-<td>string</td>
-<td>Custom x label</td>
-</tr>
-<tr>
-<td>y_label</td>
-<td>string</td>
-<td>Custom y label</td>
-</tr>
-<tr>
-<td>category_order</td>
-<td>string</td>
-<td>Custom ordering of categories. Allowed values: &#39;a-z&rsquo;, &#39;z-a&rsquo;, &#39;asc&rsquo;, and &#39;dsc&rsquo;</td>
-</tr>
-</tbody></table>
+<p>We&rsquo;ve written JavaScript clients for Node.js and the browser. You can check out the official Popily Node.js client on <a href="https://www.npmjs.com/package/popily">npm</a> and <a href="https://github.com/popily/popily-node">GitHub</a>, and the browser client on <a href="https://github.com/popily/popily-js">GitHub</a>.</p>
 
 <h1 id="getting-help">Getting help</h1>
 
 <p>We love developers because we <em>are</em> developers, so we made sure you can get help in the ways you want:</p>
 
 <ul>
-<li><strong>Slack:</strong> Ask a question in our slack community room</li>
+<li><strong>Slack:</strong> Ask a question in <a href="https://gentle-shore-82359.herokuapp.com/">our slack community room</a></li>
 <li><strong>Twitter:</strong> <a href="https://twitter.com/popilyteam">@popilyteam</a>, <a href="https://twitter.com/jonathonmorgan">@jonathonmorgan</a>, <a href="https://twitter.com/chrisalbon">@chrisalbon</a></li>
 <li><strong>Email:</strong> &#97;&#119;&#101;&#115;&#111;&#109;&#101;&#64;&#112;&#111;&#112;&#105;&#108;&#121;&#46;&#99;&#111;&#109;, &#106;&#111;&#110;&#97;&#116;&#104;&#111;&#110;&#64;&#112;&#111;&#112;&#105;&#108;&#121;&#46;&#99;&#111;&#109;, &#99;&#104;&#114;&#105;&#115;&#64;&#112;&#111;&#112;&#105;&#108;&#121;&#46;&#99;&#111;&#109;</li>
 </ul>
@@ -1353,7 +1134,7 @@
           <div class="lang-selector">
                 <a href="#" data-language-name="python">python</a>
                 <a href="#" data-language-name="javascript">javascript</a>
-                <a href="#" data-language-name="http">http</a>
+                <a href="#" data-language-name="json">json</a>
           </div>
       </div>
     </div>
