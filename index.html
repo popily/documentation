@@ -123,6 +123,57 @@
 
 <p>Popily makes it it easy to embed customer-facing analytics into your application. We have client libraries in Python and JavaScript (more coming soon!) that interact with a REST API, so you can connect to your data, ask the API for the information you want, and drop cool interactive visualizations into your application &ndash; all with just a few lines of code. </p>
 
+<h1 id="quick-start">Quick start</h1>
+
+<p>Getting started is easy. Just send some data, pick a column to visualize, and embed the results. </p>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">popily_api</span> <span class="kn">import</span> <span class="n">Popily</span>
+
+<span class="n">popily</span> <span class="o">=</span> <span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR API KEY'</span><span class="p">)</span>
+
+<span class="c"># Add a source</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s">'column_header'</span><span class="p">:</span> <span class="s">'Column 1'</span><span class="p">,</span>
+        <span class="s">'data_type'</span><span class="p">:</span> <span class="s">'number'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s">'column_header'</span><span class="p">:</span> <span class="s">'Column 2'</span><span class="p">,</span>
+        <span class="s">'data_type'</span><span class="p">:</span> <span class="s">'category'</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">popily</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span><span class="s">'http://url-of-your-csv.csv'</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="c"># Get some insights</span>
+<span class="n">insights</span> <span class="o">=</span> <span class="n">popily</span><span class="o">.</span><span class="n">get_insights</span><span class="p">(</span><span class="n">source</span><span class="p">[</span><span class="s">'id'</span><span class="p">])</span>
+
+<span class="c"># Embed the insight with an iframe</span>
+<span class="n">embed_url</span> <span class="o">=</span> <span class="n">insights</span><span class="p">[</span><span class="s">'results'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s">'embed_url'</span><span class="p">]</span>
+</code></pre>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popily</span><span class="p">(</span><span class="s1">'YOUR API KEY'</span><span class="p">)</span>
+
+<span class="c1">// Add a source</span>
+<span class="nx">columns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s1">'column_header'</span><span class="p">:</span> <span class="s1">'Column 1'</span><span class="p">,</span>
+        <span class="s1">'data_type'</span><span class="p">:</span> <span class="s1">'number'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s1">'column_header'</span><span class="p">:</span> <span class="s1">'Column 2'</span><span class="p">,</span>
+        <span class="s1">'data_type'</span><span class="p">:</span> <span class="s1">'category'</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">addSource</span><span class="p">(</span><span class="s1">'http://url-of-your-csv.csv'</span><span class="p">,</span> <span class="p">{</span><span class="na">columns</span><span class="p">:</span><span class="nx">columns</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">source</span><span class="p">);</span> 
+<span class="p">});</span>
+
+<span class="c1">// Get some insights</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">get_insights</span><span class="p">(</span><span class="nx">source</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="p">{},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insights</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">iframe</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">'iframe'</span><span class="p">);</span>
+    <span class="nx">iframe</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">insights</span><span class="p">.</span><span class="nx">results</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">embed_url</span><span class="p">;</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">iframe</span><span class="p">);</span>     
+<span class="p">});</span>
+</code></pre>
+
 <h1 id="concepts">Concepts</h1>
 
 <p>We have four big concepts in Popily that you&rsquo;ll use throughout your journey with our API.</p>
@@ -227,13 +278,13 @@
 <h2 id="pagination">Pagination</h2>
 
 <p>Popily uses pagination when <code class="prettyprint">GET</code> requests returns a list of objects (e.g. insights, sources). To get all objects in a list of objects, you will need to paginate through the list. Every list response has a <code class="prettyprint">prev</code> and <code class="prettyprint">next</code> property just for this purposes. For example:</p>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="err">//</span><span class="w"> </span><span class="err">list</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">response</span><span class="w"> </span><span class="err">objects</span><span class="w">
-  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> 
-  </span><span class="nt">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://popily.com/path/to/next/"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"previous"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://popily.com/path/to/prev/"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
+<pre class="highlight plaintext"><code>{
+  // list of response objects
+  "results": [], 
+  "next": "https://popily.com/path/to/next/",
+  "previous": "https://popily.com/path/to/prev/"
+}
+</code></pre>
 
 <h1 id="sources">Sources</h1>
 
