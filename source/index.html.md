@@ -822,6 +822,31 @@ popily.getInsight('some-slug', options, function(err, insight) {
 
 Just like with lists of `insight` objects, you can filter the data of a single `insight`. See the [Filtering your data](#filtering-your-data) section for details.
 
+## Refreshing insight data
+
+Any `insight` can be updated on a schedule, so it's automatically up to date when your data changes. Just set the `refresh_rate` property to the number of hours between refreshes. For example a `refresh_rate` of 24 would update once per day.
+
+You only need to set the `refresh_rate` once, however there is no harm in setting it more often than that. A `refresh_rate` of 0 will stop your `insight` from being automatically updated.
+
+```python
+import popily_api
+
+popily = Popily('YOUR API KEY')
+popily.get_insight('some-slug', refresh_rate=24)
+```
+```javascript
+// Node.js
+var popily = require('popily')('YOUR API TOKEN');
+
+// Browser
+var popily = new Popily('YOUR API KEY')
+
+// Get insight by slug
+popily.getInsight('some-slug', {refresh_rate: 24}, function(err, insight) {
+  console.log(insight);
+});
+```
+
 # Users endpoint
 
 You can create user accounts to associate source and insight resources with specific users of your application. Your authentication token allows you to access the source and insight objects of any users you create.
