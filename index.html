@@ -1107,6 +1107,28 @@
 
 <p>Just like with lists of <code class="prettyprint">insight</code> objects, you can filter the data of a single <code class="prettyprint">insight</code>. See the <a href="#filtering-your-data">Filtering your data</a> section for details.</p>
 
+<h2 id="refreshing-insight-data">Refreshing insight data</h2>
+
+<p>Any <code class="prettyprint">insight</code> can be updated on a schedule, so it&rsquo;s automatically up to date when your data changes. Just set the <code class="prettyprint">refresh_rate</code> property to the number of hours between refreshes. For example a <code class="prettyprint">refresh_rate</code> of 24 would update once per day.</p>
+
+<p>You only need to set the <code class="prettyprint">refresh_rate</code> once, however there is no harm in setting it more often than that. A <code class="prettyprint">refresh_rate</code> of 0 will stop your <code class="prettyprint">insight</code> from being automatically updated.</p>
+<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">popily_api</span>
+
+<span class="n">popily</span> <span class="o">=</span> <span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR API KEY'</span><span class="p">)</span>
+<span class="n">popily</span><span class="o">.</span><span class="n">get_insight</span><span class="p">(</span><span class="s">'some-slug'</span><span class="p">,</span> <span class="n">refresh_rate</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight javascript"><code><span class="c1">// Node.js</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'popily'</span><span class="p">)(</span><span class="s1">'YOUR API TOKEN'</span><span class="p">);</span>
+
+<span class="c1">// Browser</span>
+<span class="kd">var</span> <span class="nx">popily</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Popily</span><span class="p">(</span><span class="s1">'YOUR API KEY'</span><span class="p">)</span>
+
+<span class="c1">// Get insight by slug</span>
+<span class="nx">popily</span><span class="p">.</span><span class="nx">getInsight</span><span class="p">(</span><span class="s1">'some-slug'</span><span class="p">,</span> <span class="p">{</span><span class="na">refresh_rate</span><span class="p">:</span> <span class="mi">24</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">insight</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">insight</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre>
+
 <h1 id="users-endpoint">Users endpoint</h1>
 
 <p>You can create user accounts to associate source and insight resources with specific users of your application. Your authentication token allows you to access the source and insight objects of any users you create.</p>
@@ -1190,5 +1212,17 @@
           </div>
       </div>
     </div>
+    <!-- Google Analytics Code Start -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-61764668-3', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <!-- Google Analytics Code End -->
   </body>
 </html>
