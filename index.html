@@ -123,9 +123,13 @@
 
 <p>Popily makes it it easy to embed customer-facing analytics into your application. We have client libraries in Python and JavaScript (more coming soon!) that interact with a REST API, so you can connect to your data, ask the API for the information you want, and drop cool interactive visualizations into your application &ndash; all with just a few lines of code. </p>
 
-<h1 id="quick-start">Quick start</h1>
+<h1 id="blindingly-quick-start">Blindingly Quick Start</h1>
 
-<p>Getting started is easy. Just send some data, pick a column to visualize, and embed the results. </p>
+<p>Check out <a href="https://github.com/popily/popily-js">the intro to our JavaScript API</a>. Add data, get charts. Presto! </p>
+
+<h1 id="still-pretty-quick-start">Still Pretty Quick Start</h1>
+
+<p>Just send some data, pick a column to visualize, and embed the results. You can embed Popily visualizations in an iFrame, or use our <a href="https://github.com/popily/popily-js">JavaScript library</a> to build responsive, interactive dashboards in a few lines of code.</p>
 <pre class="highlight python"><code><span class="kn">from</span> <span class="nn">popily_api</span> <span class="kn">import</span> <span class="n">Popily</span>
 
 <span class="n">popily</span> <span class="o">=</span> <span class="n">Popily</span><span class="p">(</span><span class="s">'YOUR API KEY'</span><span class="p">)</span>
@@ -182,7 +186,7 @@
 <li>Data sources - Wherever your data comes from (a database, CSV file, etc).</li>
 <li>Columns - Each source has columns, which are like database columns. (If you are working with JSON, we&rsquo;ll flatten the properties into something we can treat like columns)</li>
 <li>Insights - A relationship between columns. Like average employee salary over time.</li>
-<li>Filters - A &ldquo;slide&rdquo; of the data (like a <code class="prettyprint">WHERE</code> clause in a SQL query). Like average salary for employee John Smith over time.</li>
+<li>Filters - A &ldquo;slice&rdquo; of the data (like a <code class="prettyprint">WHERE</code> clause in a SQL query). Like average salary for employee John Smith over time.</li>
 </ol>
 
 <p>With that out of the way, let&rsquo;s get started.</p>
