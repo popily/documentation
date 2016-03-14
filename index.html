@@ -923,7 +923,7 @@ var columns = [
 var filePath = {'data': '/path/to/the/file.csv'}
 popily.addSource({
   title: title
-  columns: columns, 
+  columns: columns,
   data: filePath
   }, function(err, source) {
     // ..
@@ -933,7 +933,7 @@ popily.addSource({
 var url = 'https://example.com/dataset.csv'
 popily.addSource({
     title: title
-    columns: columns, 
+    columns: columns,
     url: url
   }, function(err, source) {
     // ..
@@ -944,7 +944,7 @@ var connectionString = 'mysql://username:password@host:port/database'
 var query = 'SELECT * FROM TableA'
 popily.addSource({
   title: title
-  columns: columns, 
+  columns: columns,
   connection_string: connectionString,
   query: query
   }, function(err, source) {
@@ -1222,7 +1222,7 @@ popily.getInsights(324442, {
 </code></pre>
 <pre class="highlight plaintext"><code>// Get insight 249985
 popily.getInsight(249985, {}, {
-  height: 500, 
+  height: 500,
   width=500
   }, function(err, insight) {
     // ,,
