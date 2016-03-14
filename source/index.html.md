@@ -19,9 +19,13 @@ search: true
 
 Popily makes it it easy to embed customer-facing analytics into your application. We have client libraries in Python and JavaScript (more coming soon!) that interact with a REST API, so you can connect to your data, ask the API for the information you want, and drop cool interactive visualizations into your application -- all with just a few lines of code. 
 
-# Quick start
+# Blindingly Quick Start
 
-Getting started is easy. Just send some data, pick a column to visualize, and embed the results. 
+Check out [the intro to our JavaScript API](https://github.com/popily/popily-js). Add data, get charts. Presto! 
+
+# Still Pretty Quick Start
+
+Just send some data, pick a column to visualize, and embed the results. You can embed Popily visualizations in an iFrame, or use our [JavaScript library](https://github.com/popily/popily-js) to build responsive, interactive dashboards in a few lines of code.
 
 ```python
 from popily_api import Popily
@@ -80,7 +84,7 @@ We have four big concepts in Popily that you'll use throughout your journey with
 1. Data sources - Wherever your data comes from (a database, CSV file, etc).
 2. Columns - Each source has columns, which are like database columns. (If you are working with JSON, we'll flatten the properties into something we can treat like columns)
 3. Insights - A relationship between columns. Like average employee salary over time.
-4. Filters - A "slide" of the data (like a `WHERE` clause in a SQL query). Like average salary for employee John Smith over time.
+4. Filters - A "slice" of the data (like a `WHERE` clause in a SQL query). Like average salary for employee John Smith over time.
 
 With that out of the way, let's get started.
 
